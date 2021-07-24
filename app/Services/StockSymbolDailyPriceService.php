@@ -38,6 +38,17 @@ Class StockSymbolDailyPriceService
     }
 
     /**
+     * @param $data
+     */
+    public function bulkUpdate($data)
+    {
+        foreach ($data as $item) {
+            $stockSymbol = StockSymbol::where('name', $item['name'])->first();
+            $this->update($stockSymbol, $item['day'], $item['price']);
+        }
+    }
+
+    /**
      * @param StockSymbol $stockSymbol
      * @param $day
      * @return HasMany

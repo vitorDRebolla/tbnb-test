@@ -71,4 +71,12 @@ class StockSymbolDailyPriceController extends Controller
     {
         $this->stockSymbolDailyPriceService->destroy($stockSymbol, $request->get('day'));
     }
+
+    /**
+     * @param Request $request
+     */
+    public function bulkUpdate(Request $request)
+    {
+        $this->stockSymbolDailyPriceService->bulkUpdate($request->all());
+    }
 }

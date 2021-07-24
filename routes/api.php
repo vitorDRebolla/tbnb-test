@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('stock-symbols', 'StockSymbolController');
-Route::apiResource('stock-symbols/{stock_symbol}/daily-prices', 'StockSymbolDailyPriceService')->except('destroy');
-Route::post('stock-symbols/{stock_symbol}/daily-prices/delete', 'StockSymbolDailyPriceService@destroy');
-Route::get('stock-symbols/{stock_symbol}/daily/{day}/prices', 'StockSymbolDailyPriceService@show');
+Route::apiResource('stock-symbols/{stock_symbol}/daily-prices', 'StockSymbolDailyPriceController')->except('destroy');
+Route::post('stock-symbols/{stock_symbol}/daily-prices/delete', 'StockSymbolDailyPriceController@destroy');
+Route::get('stock-symbols/{stock_symbol}/daily/{day}/prices', 'StockSymbolDailyPriceController@show');
+Route::post('stock-symbols-daily-price', 'StockSymbolDailyPriceController@bulkUpdate');
