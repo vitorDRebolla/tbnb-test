@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\StockSymbol;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 Class StockSymbolDailyPriceService
 {
@@ -42,10 +43,17 @@ Class StockSymbolDailyPriceService
      */
     public function bulkUpdate($data)
     {
-        foreach ($data as $item) {
-            $stockSymbol = StockSymbol::where('name', $item['name'])->first();
-            $this->update($stockSymbol, $item['day'], $item['price']);
+        DB::beginTransaction();
+        try {
+            foreach ($data as $item) {
+                $stockSymbol = StockSymbol::where('name', $item['name'])->first();
+                $this->update($stockSymbol, $item['day'], $item['price']);
+            }
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
         }
+
     }
 
     /**

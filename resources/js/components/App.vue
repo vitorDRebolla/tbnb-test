@@ -1,13 +1,11 @@
 <template>
-    <div>
-        <h1>fksdopfdkso</h1>
-        <p>
-            <router-link :to="{ name: 'home' }">Home</router-link> |
-        </p>
-        <div class="container">
-            <router-view></router-view>
-        </div>
-    </div>
+    <v-app>
+        <v-main>
+            <div class="container">
+                <router-view/>
+            </div>
+        </v-main>
+    </v-app>
 </template>
 <script>
     export default {}

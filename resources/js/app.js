@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 import App from './components/App'
 import Home from './components/Home'
+import vuetify from './plugins/vuetify'
+
 const router = new VueRouter({
     mode: 'history',
     routes: [
@@ -17,4 +19,5 @@ const app = new Vue({
     el: '#app',
     components: { App },
     router,
+    vuetify
 });
