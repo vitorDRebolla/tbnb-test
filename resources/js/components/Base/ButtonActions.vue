@@ -1,12 +1,20 @@
 <template>
     <div>
         <div v-if="!editMode">
-            <v-btn small class="mr-2" @click="onUpdate">Edit</v-btn>
-            <v-btn small @click="onDelete">Delete</v-btn>
+            <v-btn small class="mr-2" @click="onUpdate">
+                <v-icon>far fa-edit</v-icon>
+            </v-btn>
+            <v-btn small @click="onDelete">
+                <v-icon>far fa-trash-alt</v-icon>
+            </v-btn>
         </div>
         <div v-if="editMode">
-            <v-btn small class="mr-2" @click="onSave">Save</v-btn>
-            <v-btn small @click="onCancel">Cancel</v-btn>
+            <v-btn small class="mr-2" @click="onSave">
+                <v-icon>far fa-save</v-icon>
+            </v-btn>
+            <v-btn small @click="onCancel">
+                <v-icon>fas fa-times</v-icon>
+            </v-btn>
         </div>
     </div>
 </template>
@@ -52,5 +60,7 @@ export default {
 </script>
 
 <style scoped>
-
+* {
+    font-size: 15px !important;
+}
 </style>

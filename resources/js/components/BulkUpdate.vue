@@ -12,6 +12,9 @@ export default {
             stockSymbols: [],
         };
     },
+    mounted() {
+        this.getStockSymbols();
+    },
     methods: {
         getStockSymbols() {
             this.axios.get('/api/stock-symbols').then(({data}) => {
