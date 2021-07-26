@@ -1,12 +1,16 @@
 <template>
     <div>
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 v-if="!editMode" class="font-weight-bold mb-0">{{ stockSymbol.name }}</h4>
+            <h4
+                v-if="!editMode"
+                style="color: #54413b"
+                class="font-weight-bold mb-0"
+            >{{ stockSymbol.name }}</h4>
             <input
                 v-if="editMode"
                 v-model="stockSymbol.name"
-                class="form-control col-1 text-uppercase"
-                maxlength="8"
+                class="form-control col-2 text-uppercase edit-input"
+                maxlength="6"
             />
             <ButtonActions
                 :hasMode="stockSymbol.id === 0"
@@ -16,10 +20,16 @@
                 @onUpdate="setEditMode"
             />
         </div>
-        <div v-for="(dailyPrice, dailyPriceIndex) in activeDailyPrices" class="card p-3 mb-2">
+        <div
+            v-for="(dailyPrice, dailyPriceIndex) in activeDailyPrices"
+            class="card p-3 mb-2 daily-price-background"
+        >
             <DailyPrice v-model="stockSymbol.daily_prices[dailyPriceIndex]" @onCancel="cancelDailyPrice"/>
         </div>
-        <v-btn v-if="stockSymbol.id !== 0" class="mt-4" @click="addDailyPrice">+ Add Daily Price</v-btn>
+        <v-btn v-if="stockSymbol.id !== 0" class="mt-4" @click="addDailyPrice">
+            <v-icon style="font-size: 11px">fas fa-plus fa-pull-left</v-icon>
+            <span>Add Daily Price</span>
+        </v-btn>
     </div>
 </template>
 
@@ -62,16 +72,16 @@ export default {
         },
         validateStockSymbolName() {
             const name = this.stockSymbol.name;
-            return name.length <= 2 || name.length > 8;
+            return name.length <= 2 || name.length > 6;
         },
         saveNewStockSymbol() {
-            axios.post('/stock-symbols', this.stockSymbol).then(({data}) => {
+            this.axios.post('/api/stock-symbols', this.stockSymbol).then(({data}) => {
                 this.stockSymbol.id = data.id;
                 this.setEditMode(false);
             })
         },
         updateStockSymbol() {
-            axios.put(`/stock-symbols/${this.stockSymbol.id}`, this.stockSymbol).then(({data}) => {
+            this.axios.put(`/api/stock-symbols/${this.stockSymbol.id}`, this.stockSymbol).then(({data}) => {
                 this.originalName = data.name;
                 this.setEditMode(false);
             });
@@ -97,7 +107,7 @@ export default {
             this.setEditMode(value);
         },
         onDelete() {
-            axios.delete(`/stock-symbols/${this.stockSymbol.id}`).then(() => {
+            this.axios.delete(`/api/stock-symbols/${this.stockSymbol.id}`).then(() => {
                 this.$emit('onDelete');
             })
         },
@@ -122,5 +132,7 @@ export default {
 </script>
 
 <style scoped>
-
+.daily-price-background {
+    background-color: #ffece6
+}
 </style>

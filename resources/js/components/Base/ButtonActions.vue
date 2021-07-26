@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="!editMode">
-            <v-btn small class="mr-2" @click="onUpdate">Update</v-btn>
+            <v-btn small class="mr-2" @click="onUpdate">Edit</v-btn>
             <v-btn small @click="onDelete">Delete</v-btn>
         </div>
         <div v-if="editMode">

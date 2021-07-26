@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StockSymbolController;
+use App\Http\Controllers\StockSymbolDailyPriceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::apiResource('stock-symbols', 'StockSymbolController');
-Route::apiResource('stock-symbols/{stock_symbol}/daily-prices', 'StockSymbolDailyPriceController')->except('destroy');
-Route::delete('stock-symbols/{stock_symbol}/daily/{day}/prices/delete', 'StockSymbolDailyPriceController@destroy');
-Route::get('stock-symbols/{stock_symbol}/daily/{day}/prices', 'StockSymbolDailyPriceController@show');
-Route::post('stock-symbols-daily-price', 'StockSymbolDailyPriceController@bulkUpdate');
+Route::apiResource('stock-symbols', StockSymbolController::class);
+Route::apiResource('stock-symbols/{stock_symbol}/daily-prices', StockSymbolDailyPriceController::class)->except(['destroy', 'show']);
+Route::delete('stock-symbols/{stock_symbol}/daily/{day}/prices',StockSymbolDailyPriceController::class . '@destroy');
+Route::get('stock-symbols/{stock_symbol}/daily/{day}/prices', StockSymbolDailyPriceController::class . '@show');
+Route::post('stock-symbols-daily-price', StockSymbolDailyPriceController::class . '@bulkUpdate');

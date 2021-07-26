@@ -54,3 +54,14 @@ export default {
     }
 }
 </script>
+<style>
+.v-btn--outlined {
+    border-color: white !important;
+    color: white !important;
+}
+
+.edit-input {
+    max-height: 28px;
+}
+
+</style>

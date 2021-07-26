@@ -1,21 +1,19 @@
 <template>
     <div>
         <div class="d-flex justify-content-between align-items-center">
-            <h5 v-if="!editMode" class="mb-0">{{ dailyPrice.day | formatDate }} - ${{ dailyPrice.price }}</h5>
+            <h5 v-if="!editMode" class="mb-0">{{ dailyPrice.day | formatDate }} - ${{ dailyPrice.price.toString().replace('.', ',') }}</h5>
             <div v-if="editMode" class="d-flex align-items-center">
                 <h5 v-if="dailyPrice.id !== 0" class="mb-0">{{ dailyPrice.day | formatDate }}</h5>
                 <input
                     v-if="dailyPrice.id === 0"
                     v-model="dailyPrice.day"
-                    class="form-control col-6"
-                    style="max-height: 28px"
+                    class="form-control col-6 edit-input"
                     type="DATE"
                 />
                 <h5 class="mb-0">&nbsp;- $</h5>
                 <input
                     v-model="dailyPrice.price"
-                    class="form-control col-5"
-                    style="max-height: 28px"
+                    class="form-control col-5 edit-input"
                     type="number"
                 />
             </div>
@@ -83,8 +81,8 @@ export default {
             this.updateDailyPrice();
         },
         onDelete() {
-            axios.delete(
-                `/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily/${this.dailyPrice.day}/prices/delete`
+            this.axios.delete(
+                `/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily/${this.dailyPrice.day}/prices`
             ).then(() => {
                 this.dailyPrice.deleted = true;
             });
@@ -98,15 +96,15 @@ export default {
             return isValid;
         },
         saveNewDailyPrice() {
-            axios.post(`stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices`, this.dailyPrice)
+            this.axios.post(`/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices`, this.dailyPrice)
                 .then(({data}) => {
                     this.dailyPrice.id = data.id;
                     this.setEditMode(false);
                 })
         },
         updateDailyPrice() {
-            axios.put(
-                `stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices/${this.dailyPrice.id}`,
+            this.axios.put(
+                `/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices/${this.dailyPrice.id}`,
                 this.dailyPrice
             ).then(({data}) => {
                 this.originalPrice = data.price;
