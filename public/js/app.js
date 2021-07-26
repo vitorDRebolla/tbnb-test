@@ -1940,7 +1940,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'BulkUpdate'
+  name: 'BulkUpdate',
+  data: function data() {
+    return {
+      stockSymbols: []
+    };
+  },
+  methods: {
+    getStockSymbols: function getStockSymbols() {
+      var _this = this;
+
+      this.axios.get('/api/stock-symbols').then(function (_ref) {
+        var data = _ref.data;
+        _this.stockSymbols = data;
+      }).then(function () {
+        _this.loading = false;
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -1963,7 +1980,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'Charts'
+  name: 'Charts',
+  data: function data() {
+    return {
+      stockSymbols: []
+    };
+  },
+  methods: {
+    getStockSymbols: function getStockSymbols() {
+      var _this = this;
+
+      this.axios.get('/api/stock-symbols').then(function (_ref) {
+        var data = _ref.data;
+        _this.stockSymbols = data;
+      }).then(function () {
+        _this.loading = false;
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -4496,7 +4530,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    Charts\n")])
+  return _c("div", [_vm._v("\n  Charts\n")])
 }
 var staticRenderFns = []
 render._withStripped = true
