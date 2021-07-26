@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between mt-13">
+        <div class="d-flex mt-13">
             <v-btn
+                class="mr-4"
                 :outlined="selectedComponent === 1"
                 elevation="2"
                 @click="changeSelectedComponent(1)"
@@ -9,6 +10,7 @@
                 Home
             </v-btn>
             <v-btn
+                class="mr-4"
                 :outlined="selectedComponent === 2"
                 elevation="2"
                 @click="changeSelectedComponent(2)"
@@ -16,6 +18,7 @@
                 Charts
             </v-btn>
             <v-btn
+                class="mr-4"
                 :outlined="selectedComponent === 3"
                 elevation="2"
                 @click="changeSelectedComponent(3)"

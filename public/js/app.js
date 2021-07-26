@@ -182,6 +182,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -269,13 +272,9 @@ __webpack_require__.r(__webpack_exports__);
     this.getStockSymbols();
   },
   methods: {
-    getStockSymbols: function getStockSymbols() {
-      var _this = this;
-
-      axios.get('/stock-symbols').then(function (_ref) {
-        var data = _ref.data;
-        _this.stockSymbols = data;
-      });
+    getStockSymbols: function getStockSymbols() {// axios.get('/stock-symbols').then(({data}) => {
+      //     this.stockSymbols = data;
+      // })
     },
     addStockSymbol: function addStockSymbol() {
       var lastItem = this.stockSymbols[this.stockSymbols.length - 1];
@@ -322,6 +321,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DailyPrice',
@@ -341,14 +363,74 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
+  mounted: function mounted() {
+    this.originalPrice = this.dailyPrice.price;
+    this.setEditMode(this.dailyPrice.id === 0);
+  },
   data: function data() {
     return {
-      editMode: false
+      editMode: false,
+      originalPrice: 0
     };
   },
   methods: {
     setEditMode: function setEditMode(mode) {
       this.editMode = mode;
+    },
+    onCancel: function onCancel(value) {
+      if (this.dailyPrice.id === 0) {
+        this.$emit('onCancel');
+      }
+
+      this.dailyPrice.price = this.originalPrice;
+      this.setEditMode(value);
+    },
+    onSave: function onSave() {
+      if (!this.validateDailyPrice) {
+        return;
+      }
+
+      if (this.dailyPrice.id === 0) {
+        this.saveNewDailyPrice();
+      }
+
+      this.updateDailyPrice();
+    },
+    onDelete: function onDelete() {
+      var _this = this;
+
+      axios["delete"]("/stock-symbols/".concat(this.dailyPrice.stock_symbol_id, "/daily/").concat(this.dailyPrice.day, "/prices/delete")).then(function () {
+        _this.dailyPrice.deleted = true;
+      });
+    },
+    validateDailyPrice: function validateDailyPrice() {
+      var isValid = true;
+
+      if (+this.dailyPrice.price === 0) {
+        isValid = false;
+      }
+
+      return isValid;
+    },
+    saveNewDailyPrice: function saveNewDailyPrice() {
+      var _this2 = this;
+
+      axios.post("stock-symbols/".concat(this.dailyPrice.stock_symbol_id, "/daily-prices"), this.dailyPrice).then(function (_ref) {
+        var data = _ref.data;
+        _this2.dailyPrice.id = data.id;
+
+        _this2.setEditMode(false);
+      });
+    },
+    updateDailyPrice: function updateDailyPrice() {
+      var _this3 = this;
+
+      axios.put("stock-symbols/".concat(this.dailyPrice.stock_symbol_id, "/daily-prices/").concat(this.dailyPrice.id), this.dailyPrice).then(function (_ref2) {
+        var data = _ref2.data;
+        _this3.originalPrice = data.price;
+
+        _this3.setEditMode(false);
+      });
     }
   },
   filters: {
@@ -387,6 +469,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -406,23 +500,30 @@ __webpack_require__.r(__webpack_exports__);
       set: function set(value) {
         this.$emit('input', value);
       }
+    },
+    activeDailyPrices: function activeDailyPrices() {
+      return this.stockSymbol.daily_prices.filter(function (dailyPrice) {
+        return !dailyPrice.deleted;
+      });
     }
   },
   mounted: function mounted() {
     this.originalName = this.stockSymbol.name;
-    this.hasMode = this.stockSymbol.id === 0;
-    this.setEditMode(this.hasMode);
+    this.setEditMode(this.stockSymbol.id === 0);
   },
   data: function data() {
     return {
       editMode: false,
-      originalName: '',
-      hasMode: false
+      originalName: ''
     };
   },
   methods: {
     setEditMode: function setEditMode(mode) {
       this.editMode = mode;
+    },
+    validateStockSymbolName: function validateStockSymbolName() {
+      var name = this.stockSymbol.name;
+      return name.length <= 2 || name.length > 8;
     },
     saveNewStockSymbol: function saveNewStockSymbol() {
       var _this = this;
@@ -430,29 +531,32 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/stock-symbols', this.stockSymbol).then(function (_ref) {
         var data = _ref.data;
         _this.stockSymbol.id = data.id;
+
+        _this.setEditMode(false);
       });
     },
-    onSave: function onSave() {
+    updateStockSymbol: function updateStockSymbol() {
       var _this2 = this;
 
-      if (this.stockSymbol.id === 0) {
-        this.saveNewStockSymbol();
-        return;
-      }
-
-      var name = this.stockSymbol.name;
-
-      if (name.length <= 2 || name.length > 4) {
-        return;
-      }
-
-      this.stockSymbol.name = this.stockSymbol.name.toUpperCase();
       axios.put("/stock-symbols/".concat(this.stockSymbol.id), this.stockSymbol).then(function (_ref2) {
         var data = _ref2.data;
         _this2.originalName = data.name;
 
         _this2.setEditMode(false);
       });
+    },
+    onSave: function onSave() {
+      if (!this.validateStockSymbolName()) {
+        return;
+      }
+
+      if (this.stockSymbol.id === 0) {
+        this.saveNewStockSymbol();
+        return;
+      }
+
+      this.stockSymbol.name = this.stockSymbol.name.toUpperCase();
+      this.updateStockSymbol();
     },
     onCancel: function onCancel(value) {
       if (this.stockSymbol.id === 0) {
@@ -468,6 +572,23 @@ __webpack_require__.r(__webpack_exports__);
       axios["delete"]("/stock-symbols/".concat(this.stockSymbol.id)).then(function () {
         _this3.$emit('onDelete');
       });
+    },
+    addDailyPrice: function addDailyPrice() {
+      var lastItem = this.stockSymbol.daily_prices[this.stockSymbol.daily_prices.length - 1];
+
+      if (lastItem.id === 0) {
+        return;
+      }
+
+      this.stockSymbol.daily_prices.push({
+        id: 0,
+        stock_symbol_id: this.stockSymbol.id,
+        day: '',
+        price: 0.00
+      });
+    },
+    cancelDailyPrice: function cancelDailyPrice() {
+      this.stockSymbol.daily_prices.pop();
     }
   }
 });
@@ -1705,11 +1826,12 @@ var render = function() {
   return _c("div", [
     _c(
       "div",
-      { staticClass: "d-flex justify-content-between mt-13" },
+      { staticClass: "d-flex mt-13" },
       [
         _c(
           "v-btn",
           {
+            staticClass: "mr-4",
             attrs: { outlined: _vm.selectedComponent === 1, elevation: "2" },
             on: {
               click: function($event) {
@@ -1723,6 +1845,7 @@ var render = function() {
         _c(
           "v-btn",
           {
+            staticClass: "mr-4",
             attrs: { outlined: _vm.selectedComponent === 2, elevation: "2" },
             on: {
               click: function($event) {
@@ -1736,6 +1859,7 @@ var render = function() {
         _c(
           "v-btn",
           {
+            staticClass: "mr-4",
             attrs: { outlined: _vm.selectedComponent === 3, elevation: "2" },
             on: {
               click: function($event) {
@@ -1796,7 +1920,7 @@ var render = function() {
       _vm._l(_vm.stockSymbols, function(stockSymbol, stockSymbolIndex) {
         return _c(
           "div",
-          { staticClass: "card py-3 px-5 d-flex flex-column mb-3" },
+          { staticClass: "card shadow py-3 px-5 d-flex flex-column mb-3" },
           [
             _c("StockSymbol", {
               on: { onCancel: _vm.onCancel, onDelete: _vm.onDelete },
@@ -1844,15 +1968,85 @@ var render = function() {
       "div",
       { staticClass: "d-flex justify-content-between align-items-center" },
       [
-        _c("h5", { staticClass: "mb-0" }, [
-          _vm._v(
-            _vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)) +
-              " - $" +
-              _vm._s(_vm.dailyPrice.price)
-          )
-        ]),
+        !_vm.editMode
+          ? _c("h5", { staticClass: "mb-0" }, [
+              _vm._v(
+                _vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)) +
+                  " - $" +
+                  _vm._s(_vm.dailyPrice.price)
+              )
+            ])
+          : _vm._e(),
         _vm._v(" "),
-        _c("ButtonActions")
+        _vm.editMode
+          ? _c("div", { staticClass: "d-flex align-items-center" }, [
+              _vm.dailyPrice.id !== 0
+                ? _c("h5", { staticClass: "mb-0" }, [
+                    _vm._v(_vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)))
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.dailyPrice.id === 0
+                ? _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.dailyPrice.day,
+                        expression: "dailyPrice.day"
+                      }
+                    ],
+                    staticClass: "form-control col-6",
+                    staticStyle: { "max-height": "28px" },
+                    attrs: { type: "DATE" },
+                    domProps: { value: _vm.dailyPrice.day },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.dailyPrice, "day", $event.target.value)
+                      }
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _c("h5", { staticClass: "mb-0" }, [_vm._v(" - $")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.dailyPrice.price,
+                    expression: "dailyPrice.price"
+                  }
+                ],
+                staticClass: "form-control col-5",
+                staticStyle: { "max-height": "28px" },
+                attrs: { type: "number" },
+                domProps: { value: _vm.dailyPrice.price },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.dailyPrice, "price", $event.target.value)
+                  }
+                }
+              })
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("ButtonActions", {
+          attrs: { hasMode: _vm.dailyPrice.id === 0 },
+          on: {
+            onCancel: _vm.onCancel,
+            onDelete: _vm.onDelete,
+            onSave: _vm.onSave,
+            onUpdate: _vm.setEditMode
+          }
+        })
       ],
       1
     )
@@ -1907,7 +2101,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control col-1 text-uppercase",
-                attrs: { maxlength: "4" },
+                attrs: { maxlength: "8" },
                 domProps: { value: _vm.stockSymbol.name },
                 on: {
                   input: function($event) {
@@ -1923,25 +2117,23 @@ var render = function() {
           _c("ButtonActions", {
             attrs: { hasMode: _vm.stockSymbol.id === 0 },
             on: {
-              onUpdate: _vm.setEditMode,
               onCancel: _vm.onCancel,
+              onDelete: _vm.onDelete,
               onSave: _vm.onSave,
-              onDelete: _vm.onDelete
+              onUpdate: _vm.setEditMode
             }
           })
         ],
         1
       ),
       _vm._v(" "),
-      _vm._l(_vm.stockSymbol.daily_prices, function(
-        dailyPrice,
-        dailyPriceIndex
-      ) {
+      _vm._l(_vm.activeDailyPrices, function(dailyPrice, dailyPriceIndex) {
         return _c(
           "div",
           { staticClass: "card p-3 mb-2" },
           [
             _c("DailyPrice", {
+              on: { onCancel: _vm.cancelDailyPrice },
               model: {
                 value: _vm.stockSymbol.daily_prices[dailyPriceIndex],
                 callback: function($$v) {
@@ -1953,7 +2145,15 @@ var render = function() {
           ],
           1
         )
-      })
+      }),
+      _vm._v(" "),
+      _vm.stockSymbol.id !== 0
+        ? _c(
+            "v-btn",
+            { staticClass: "mt-4", on: { click: _vm.addDailyPrice } },
+            [_vm._v("+ Add Daily Price")]
+          )
+        : _vm._e()
     ],
     2
   )

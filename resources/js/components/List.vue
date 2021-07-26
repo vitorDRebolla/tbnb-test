@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-btn class="mb-5" @click="addStockSymbol">+ Create Symbol</v-btn>
-        <div class="card py-3 px-5 d-flex flex-column mb-3" v-for="(stockSymbol, stockSymbolIndex) in stockSymbols">
+        <div class="card shadow py-3 px-5 d-flex flex-column mb-3" v-for="(stockSymbol, stockSymbolIndex) in stockSymbols">
             <StockSymbol @onCancel="onCancel" @onDelete="onDelete" v-model="stockSymbols[stockSymbolIndex]"/>
         </div>
     </div>
@@ -54,9 +54,9 @@ export default {
     },
     methods: {
         getStockSymbols() {
-            axios.get('/stock-symbols').then(({data}) => {
-                this.stockSymbols = data;
-            })
+            // axios.get('/stock-symbols').then(({data}) => {
+            //     this.stockSymbols = data;
+            // })
         },
         addStockSymbol() {
             const lastItem = this.stockSymbols[this.stockSymbols.length -1];

@@ -67,9 +67,9 @@ class StockSymbolDailyPriceController extends Controller
      * @param StockSymbol $stockSymbol
      * @param Request $request
      */
-    public function destroy(StockSymbol $stockSymbol, Request $request)
+    public function destroy(StockSymbol $stockSymbol, $day)
     {
-        $this->stockSymbolDailyPriceService->destroy($stockSymbol, $request->get('day'));
+        $this->stockSymbolDailyPriceService->destroy($stockSymbol, $day);
     }
 
     /**
