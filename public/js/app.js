@@ -51,6 +51,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'ButtonActions',
+  props: {
+    hasMode: {
+      type: Boolean,
+      "default": false,
+      required: false
+    }
+  },
+  mounted: function mounted() {
+    this.setEditMode(this.hasMode);
+  },
   data: function data() {
     return {
       editMode: false
@@ -208,6 +218,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _StockSymbols_StockSymbol__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StockSymbols/StockSymbol */ "./resources/js/components/StockSymbols/StockSymbol.vue");
+/* harmony import */ var _Base_ButtonActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Base/ButtonActions */ "./resources/js/components/Base/ButtonActions.vue");
+//
 //
 //
 //
@@ -217,9 +229,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'List',
   components: {
+    ButtonActions: _Base_ButtonActions__WEBPACK_IMPORTED_MODULE_1__.default,
     StockSymbol: _StockSymbols_StockSymbol__WEBPACK_IMPORTED_MODULE_0__.default
   },
   data: function data() {
@@ -255,9 +269,32 @@ __webpack_require__.r(__webpack_exports__);
     this.getStockSymbols();
   },
   methods: {
-    getStockSymbols: function getStockSymbols() {// axios.get('/stock-symbols').then(({data}) => {
-      //     this.stockSymbols = data;
-      // })
+    getStockSymbols: function getStockSymbols() {
+      var _this = this;
+
+      axios.get('/stock-symbols').then(function (_ref) {
+        var data = _ref.data;
+        _this.stockSymbols = data;
+      });
+    },
+    addStockSymbol: function addStockSymbol() {
+      var lastItem = this.stockSymbols[this.stockSymbols.length - 1];
+
+      if (lastItem.id === 0) {
+        return;
+      }
+
+      this.stockSymbols.push({
+        id: 0,
+        name: '',
+        daily_prices: []
+      });
+    },
+    onCancel: function onCancel() {
+      this.stockSymbols.pop();
+    },
+    onDelete: function onDelete() {
+      this.getStockSymbols();
     }
   }
 });
@@ -371,14 +408,66 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
+  mounted: function mounted() {
+    this.originalName = this.stockSymbol.name;
+    this.hasMode = this.stockSymbol.id === 0;
+    this.setEditMode(this.hasMode);
+  },
   data: function data() {
     return {
-      editMode: false
+      editMode: false,
+      originalName: '',
+      hasMode: false
     };
   },
   methods: {
     setEditMode: function setEditMode(mode) {
       this.editMode = mode;
+    },
+    saveNewStockSymbol: function saveNewStockSymbol() {
+      var _this = this;
+
+      axios.post('/stock-symbols', this.stockSymbol).then(function (_ref) {
+        var data = _ref.data;
+        _this.stockSymbol.id = data.id;
+      });
+    },
+    onSave: function onSave() {
+      var _this2 = this;
+
+      if (this.stockSymbol.id === 0) {
+        this.saveNewStockSymbol();
+        return;
+      }
+
+      var name = this.stockSymbol.name;
+
+      if (name.length <= 2 || name.length > 4) {
+        return;
+      }
+
+      this.stockSymbol.name = this.stockSymbol.name.toUpperCase();
+      axios.put("/stock-symbols/".concat(this.stockSymbol.id), this.stockSymbol).then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.originalName = data.name;
+
+        _this2.setEditMode(false);
+      });
+    },
+    onCancel: function onCancel(value) {
+      if (this.stockSymbol.id === 0) {
+        this.$emit('onCancel');
+      }
+
+      this.stockSymbol.name = this.originalName;
+      this.setEditMode(value);
+    },
+    onDelete: function onDelete() {
+      var _this3 = this;
+
+      axios["delete"]("/stock-symbols/".concat(this.stockSymbol.id)).then(function () {
+        _this3.$emit('onDelete');
+      });
     }
   }
 });
@@ -1699,25 +1788,32 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    _vm._l(_vm.stockSymbols, function(stockSymbol, stockSymbolIndex) {
-      return _c(
-        "div",
-        { staticClass: "card py-3 px-5 d-flex flex-column" },
-        [
-          _c("StockSymbol", {
-            model: {
-              value: _vm.stockSymbols[stockSymbolIndex],
-              callback: function($$v) {
-                _vm.$set(_vm.stockSymbols, stockSymbolIndex, $$v)
-              },
-              expression: "stockSymbols[stockSymbolIndex]"
-            }
-          })
-        ],
-        1
-      )
-    }),
-    0
+    [
+      _c("v-btn", { staticClass: "mb-5", on: { click: _vm.addStockSymbol } }, [
+        _vm._v("+ Create Symbol")
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.stockSymbols, function(stockSymbol, stockSymbolIndex) {
+        return _c(
+          "div",
+          { staticClass: "card py-3 px-5 d-flex flex-column mb-3" },
+          [
+            _c("StockSymbol", {
+              on: { onCancel: _vm.onCancel, onDelete: _vm.onDelete },
+              model: {
+                value: _vm.stockSymbols[stockSymbolIndex],
+                callback: function($$v) {
+                  _vm.$set(_vm.stockSymbols, stockSymbolIndex, $$v)
+                },
+                expression: "stockSymbols[stockSymbolIndex]"
+              }
+            })
+          ],
+          1
+        )
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -1810,7 +1906,8 @@ var render = function() {
                     expression: "stockSymbol.name"
                   }
                 ],
-                staticClass: "form-control col-1",
+                staticClass: "form-control col-1 text-uppercase",
+                attrs: { maxlength: "4" },
                 domProps: { value: _vm.stockSymbol.name },
                 on: {
                   input: function($event) {
@@ -1824,7 +1921,13 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _c("ButtonActions", {
-            on: { onUpdate: _vm.setEditMode, onCancel: _vm.setEditMode }
+            attrs: { hasMode: _vm.stockSymbol.id === 0 },
+            on: {
+              onUpdate: _vm.setEditMode,
+              onCancel: _vm.onCancel,
+              onSave: _vm.onSave,
+              onDelete: _vm.onDelete
+            }
           })
         ],
         1

@@ -44,11 +44,12 @@ class StockSymbolController extends Controller
         return $stockSymbol;
     }
 
-    /**
+    /** 
      * @param StockSymbol $stockSymbol
      */
     public function destroy(StockSymbol $stockSymbol)
     {
+        $stockSymbol->dailyPrices()->delete();
         $stockSymbol->delete();
     }
 }

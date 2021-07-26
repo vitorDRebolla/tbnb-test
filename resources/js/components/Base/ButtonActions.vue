@@ -14,6 +14,16 @@
 <script>
 export default {
     name: 'ButtonActions',
+    props: {
+        hasMode: {
+            type: Boolean,
+            default: false,
+            required: false,
+        }
+    },
+    mounted() {
+        this.setEditMode(this.hasMode);
+    },
     data() {
         return {
             editMode: false,
