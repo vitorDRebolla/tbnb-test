@@ -26,7 +26,7 @@ Class StockSymbolDailyPriceService
      */
     public function update(StockSymbol $stockSymbol, $day, $price)
     {
-        $this->getStockSymbolPriceByDay($stockSymbol, $day)->update($price);
+        $this->getStockSymbolPriceByDay($stockSymbol, $day)->update(['price' => $price]);
     }
 
     /**
@@ -61,7 +61,7 @@ Class StockSymbolDailyPriceService
      * @param $day
      * @return HasMany
      */
-    private function getStockSymbolPriceByDay(StockSymbol $stockSymbol, $day): HasMany
+    public function getStockSymbolPriceByDay(StockSymbol $stockSymbol, $day): HasMany
     {
         return $stockSymbol->dailyPrices()->where('day', $day);
     }

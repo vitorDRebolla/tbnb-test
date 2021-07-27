@@ -18,6 +18,6 @@ class StockSymbol extends Model
      */
     public function dailyPrices()
     {
-        return $this->hasMany(StockSymbolDailyPrice::class);
+        return $this->hasMany(StockSymbolDailyPrice::class)->orderBy('day');
     }
 }

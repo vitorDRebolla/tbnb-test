@@ -1,18 +1,18 @@
 <template>
     <div>
         <div v-if="!editMode">
-            <v-btn small class="mr-2" @click="onUpdate">
+            <v-btn :disabled="deleting" small class="mr-2" @click="onUpdate">
                 <v-icon>far fa-edit</v-icon>
             </v-btn>
-            <v-btn small @click="onDelete">
+            <v-btn :loading="deleting" :disabled="deleting" small @click="onDelete">
                 <v-icon>far fa-trash-alt</v-icon>
             </v-btn>
         </div>
         <div v-if="editMode">
-            <v-btn small class="mr-2" @click="onSave">
+            <v-btn :loading="saving" :disabled="saving" small class="mr-2" @click="onSave">
                 <v-icon>far fa-save</v-icon>
             </v-btn>
-            <v-btn small @click="onCancel">
+            <v-btn :disabled="saving" small @click="onCancel">
                 <v-icon>fas fa-times</v-icon>
             </v-btn>
         </div>
@@ -27,10 +27,25 @@ export default {
             type: Boolean,
             default: false,
             required: false,
-        }
+        },
+        saving: {
+            type: Boolean,
+            default: false,
+            required: false,
+        },
+        deleting: {
+            type: Boolean,
+            default: false,
+            required: false,
+        },
     },
     mounted() {
         this.setEditMode(this.hasMode);
+    },
+    watch: {
+      hasMode() {
+          this.setEditMode(this.hasMode);
+        }
     },
     data() {
         return {
@@ -59,8 +74,23 @@ export default {
 }
 </script>
 
-<style scoped>
-* {
-    font-size: 15px !important;
+<style scoped lang="scss">
+@media (max-width: 768px) {
+    i {
+        font-size: 13px !important;
+    }
+
+    button {
+        min-width: 36px !important;
+    }
+}
+@media (min-width: 769px) {
+    i {
+        font-size: 15px !important;
+    }
+
+    button {
+        min-width: 41px !important;
+    }
 }
 </style>

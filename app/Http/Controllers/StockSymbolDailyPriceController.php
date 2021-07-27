@@ -22,7 +22,7 @@ class StockSymbolDailyPriceController extends Controller
 
     /**
      * @param StockSymbol $stockSymbol
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function index(StockSymbol $stockSymbol)
     {
@@ -53,14 +53,18 @@ class StockSymbolDailyPriceController extends Controller
     /**
      * @param StockSymbol $stockSymbol
      * @param Request $request
+     * @return array
      */
     public function update(StockSymbol $stockSymbol, Request $request)
     {
+        $price = $request->get('price');
         $this->stockSymbolDailyPriceService->update(
             $stockSymbol,
             $request->get('day'),
-            $request->get('price')
+            $price
         );
+
+        return ['price' => $price];
     }
 
     /**

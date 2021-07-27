@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="d-flex justify-content-between align-items-center">
-            <h5 v-if="!editMode" class="mb-0">{{ dailyPrice.day | formatDate }} - ${{ dailyPrice.price.toString().replace('.', ',') }}</h5>
+            <h5 v-if="!editMode" class="mb-0">{{ dailyPrice.day | formatDate }} -
+                ${{ dailyPrice.price.toString().replace('.', ',') }}</h5>
             <div v-if="editMode" class="d-flex align-items-center">
                 <h5 v-if="dailyPrice.id !== 0" class="mb-0">{{ dailyPrice.day | formatDate }}</h5>
                 <input
@@ -18,7 +19,9 @@
                 />
             </div>
             <ButtonActions
-                :hasMode="dailyPrice.id === 0"
+                :hasMode="editMode"
+                :saving="saving"
+                :deleting="deleting"
                 @onCancel="onCancel"
                 @onDelete="onDelete"
                 @onSave="onSave"
@@ -55,6 +58,8 @@ export default {
         return {
             editMode: false,
             originalPrice: 0,
+            saving: false,
+            deleting: false
         }
     },
     methods: {
@@ -73,34 +78,38 @@ export default {
             if (!this.validateDailyPrice) {
                 return;
             }
+            this.saving = true;
 
             if (this.dailyPrice.id === 0) {
                 this.saveNewDailyPrice();
+                return;
             }
 
             this.updateDailyPrice();
         },
         onDelete() {
+            this.deleting = true;
             this.axios.delete(
                 `/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily/${this.dailyPrice.day}/prices`
             ).then(() => {
-                this.dailyPrice.deleted = true;
+                this.$emit('onDelete');
+            }).then(() => {
+                this.deleting = false;
             });
         },
         validateDailyPrice() {
-            let isValid = true;
             if (+this.dailyPrice.price === 0) {
-                isValid = false;
+                return  false;
             }
-
-            return isValid;
         },
         saveNewDailyPrice() {
             this.axios.post(`/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices`, this.dailyPrice)
                 .then(({data}) => {
                     this.dailyPrice.id = data.id;
-                    this.setEditMode(false);
-                })
+                }).then(() => {
+                this.setEditMode(false);
+                this.saving = false;
+            })
         },
         updateDailyPrice() {
             this.axios.put(
@@ -108,7 +117,9 @@ export default {
                 this.dailyPrice
             ).then(({data}) => {
                 this.originalPrice = data.price;
-                this.setEditMode(false)
+            }).then(() => {
+                this.saving = false;
+                this.setEditMode(false);
             })
         }
     },

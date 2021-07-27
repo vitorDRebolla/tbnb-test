@@ -12,39 +12,7 @@ class StockSymbolController extends Controller
      */
     public function index()
     {
-        return [
-                [
-                    'id'=> 1,
-                    'name'=> 'ABC',
-                    'daily_prices'=> [
-                        [
-                            'id'=> 1,
-                            'stock_symbol_id'=> 1,
-                            'day'=> '2021-07-25',
-                            'price'=> 56.97
-                        ],
-                        [
-                            'id'=> 2,
-                            'stock_symbol_id'=> 1,
-                            'day'=> '2021-07-26',
-                            'price'=> 23.97
-                        ],
-                        [
-                            'id'=> 3,
-                            'stock_symbol_id'=> 1,
-                            'day'=> '2021-07-27',
-                            'price'=> 65.63
-                        ],
-                        [
-                            'id'=> 4,
-                            'stock_symbol_id'=> 1,
-                            'day'=> '2021-07-28',
-                            'price'=> 12.89
-                        ],
-                    ]
-                ]
-            ];
-        return StockSymbol::all();
+        return StockSymbol::with('dailyPrices')->orderBy('name')->get();
     }
 
     /**

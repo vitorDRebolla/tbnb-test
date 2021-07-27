@@ -44,9 +44,11 @@ export default {
             })
         },
         addStockSymbol() {
-            const lastItem = this.stockSymbols[this.stockSymbols.length -1];
-            if (lastItem.id === 0) {
-                return;
+            if (this.stockSymbols.length > 0 ) {
+                const lastItem = this.stockSymbols[this.stockSymbols.length -1];
+                if (lastItem.id === 0) {
+                    return;
+                }
             }
 
             this.stockSymbols.push({
