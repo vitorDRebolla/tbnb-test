@@ -24,6 +24,7 @@
         </div>
         <div
             v-for="(dailyPrice, dailyPriceIndex) in stockSymbol.daily_prices"
+            :key="`daily-price-${dailyPrice.id}`"
             class="card p-3 mb-2 daily-price-background"
         >
             <DailyPrice v-model="stockSymbol.daily_prices[dailyPriceIndex]" @onCancel="cancelDailyPrice" @onDelete="getDailyPrices"/>
@@ -37,7 +38,7 @@
 
 <script>
 import DailyPrice from "./Dailyprice";
-import ButtonActions from "../Base/ButtonActions";
+import ButtonActions from "../Utility/ButtonActions";
 
 export default {
     name: 'StockSymbol',

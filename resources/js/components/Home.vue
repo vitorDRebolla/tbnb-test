@@ -35,9 +35,9 @@
 </template>
 
 <script>
-import List from './List';
-import Charts from './Charts';
-import BulkUpdate from './BulkUpdate';
+import List from './Base/List';
+import Charts from './Base/Charts';
+import BulkUpdate from './Base/BulkUpdate';
 
 export default {
     name: 'Home',

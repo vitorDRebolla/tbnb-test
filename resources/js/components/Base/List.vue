@@ -1,27 +1,29 @@
 <template>
     <div>
-        <v-btn class="mb-5" @click="addStockSymbol">
-            <v-icon style="font-size: 11px">fas fa-plus fa-pull-left</v-icon>
-            <span>Add Symbol</span>
-        </v-btn>
         <v-row align="center" justify="center" class="mt-3" v-if="loading">
             <v-icon>fas fa-circle-notch fa-spin fa-lg</v-icon>
             <h5 class="ml-3 mb-0">Loading...</h5>
         </v-row>
-        <div
-            v-else
-            class="card shadow py-3 px-5 d-flex flex-column mb-3"
-            style="background-color:#FCC3B1;"
-            v-for="(stockSymbol, stockSymbolIndex) in stockSymbols"
-        >
-            <StockSymbol @onCancel="onCancel" @onDelete="onDelete" v-model="stockSymbols[stockSymbolIndex]"/>
+        <div v-else>
+            <v-btn class="mb-5" @click="addStockSymbol">
+                <v-icon style="font-size: 11px">fas fa-plus fa-pull-left</v-icon>
+                <span>Add Symbol</span>
+            </v-btn>
+            <div
+                class="card shadow py-3 px-5 d-flex flex-column mb-3"
+                style="background-color:#FCC3B1;"
+                v-for="(stockSymbol, stockSymbolIndex) in stockSymbols"
+                :key="`stock-symbol-${stockSymbol.id}`"
+            >
+                <StockSymbol @onCancel="onCancel" @onDelete="onDelete" v-model="stockSymbols[stockSymbolIndex]"/>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import StockSymbol from "./StockSymbols/StockSymbol";
-import ButtonActions from "./Base/ButtonActions";
+import StockSymbol from "../StockSymbols/StockSymbol";
+import ButtonActions from "../Utility/ButtonActions";
 
 export default {
     name: 'List',

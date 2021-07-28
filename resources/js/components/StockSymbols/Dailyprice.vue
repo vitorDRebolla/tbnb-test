@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import ButtonActions from "../Base/ButtonActions";
+import ButtonActions from "../Utility/ButtonActions";
 
 export default {
     name: 'DailyPrice',
