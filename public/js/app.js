@@ -2118,6 +2118,9 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         daily_prices: []
       });
+      setTimeout(function () {
+        window.scrollTo(0, document.body.scrollHeight);
+      }, 0);
     },
     onCancel: function onCancel() {
       this.stockSymbols.pop();
@@ -2678,6 +2681,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2708,7 +2716,8 @@ __webpack_require__.r(__webpack_exports__);
       editMode: false,
       originalName: '',
       saving: false,
-      deleting: false
+      deleting: false,
+      opened: false
     };
   },
   methods: {
@@ -2840,6 +2849,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'ButtonActions',
   props: {
@@ -2854,6 +2867,16 @@ __webpack_require__.r(__webpack_exports__);
       required: false
     },
     deleting: {
+      type: Boolean,
+      "default": false,
+      required: false
+    },
+    arrowUp: {
+      type: Boolean,
+      "default": false,
+      required: false
+    },
+    arrowDown: {
       type: Boolean,
       "default": false,
       required: false
@@ -2889,6 +2912,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     onDelete: function onDelete() {
       this.$emit('onDelete');
+    },
+    changeDropdown: function changeDropdown() {
+      this.$emit('changeDropdown');
     }
   }
 });
@@ -3025,9 +3051,9 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".form-check.card[data-v-f364546a]:hove
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss&":
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true&":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss& ***!
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true& ***!
   \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -3880,9 +3906,9 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss&":
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss& ***!
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true& ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3893,7 +3919,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss&");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true&");
 
             
 
@@ -3902,11 +3928,11 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__.default, options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default, options);
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
 
 /***/ }),
 
@@ -4866,7 +4892,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ButtonActions_vue_vue_type_template_id_43f9008d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ButtonActions.vue?vue&type=template&id=43f9008d&scoped=true& */ "./resources/js/components/Utility/ButtonActions.vue?vue&type=template&id=43f9008d&scoped=true&");
 /* harmony import */ var _ButtonActions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ButtonActions.vue?vue&type=script&lang=js& */ "./resources/js/components/Utility/ButtonActions.vue?vue&type=script&lang=js&");
-/* harmony import */ var _ButtonActions_vue_vue_type_style_index_0_id_43f9008d_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss& */ "./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss&");
+/* harmony import */ var _ButtonActions_vue_vue_type_style_index_0_id_43f9008d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true& */ "./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -5112,15 +5138,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss&":
+/***/ "./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true&":
 /*!*********************************************************************************************************************!*\
-  !*** ./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss& ***!
+  !*** ./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true& ***!
   \*********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&scoped=true&lang=scss&");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ButtonActions_vue_vue_type_style_index_0_id_43f9008d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Utility/ButtonActions.vue?vue&type=style&index=0&id=43f9008d&lang=scss&scoped=true&");
 
 
 /***/ }),
@@ -6304,113 +6330,124 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "div",
-        {
-          staticClass: "d-flex justify-content-between align-items-center mb-4"
-        },
-        [
-          !_vm.editMode
-            ? _c(
-                "h4",
-                {
-                  staticClass: "font-weight-bold mb-0",
-                  staticStyle: { color: "#54413b" }
-                },
-                [_vm._v(_vm._s(_vm.stockSymbol.name))]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.editMode
-            ? _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.stockSymbol.name,
-                    expression: "stockSymbol.name"
-                  }
-                ],
-                staticClass: "form-control col-2 text-uppercase edit-input",
-                attrs: { maxlength: "6" },
-                domProps: { value: _vm.stockSymbol.name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.stockSymbol, "name", $event.target.value)
-                  }
-                }
-              })
-            : _vm._e(),
-          _vm._v(" "),
-          _c("ButtonActions", {
-            attrs: {
-              hasMode: _vm.editMode,
-              saving: _vm.saving,
-              deleting: _vm.deleting
-            },
-            on: {
-              onCancel: _vm.onCancel,
-              onDelete: _vm.onDelete,
-              onSave: _vm.onSave,
-              onUpdate: _vm.setEditMode
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm._l(_vm.stockSymbol.daily_prices, function(
-        dailyPrice,
-        dailyPriceIndex
-      ) {
-        return _c(
-          "div",
-          {
-            key: "daily-price-" + dailyPrice.id,
-            staticClass: "card p-3 mb-2 daily-price-background"
-          },
-          [
-            _c("DailyPrice", {
-              on: {
-                onCancel: _vm.cancelDailyPrice,
-                onDelete: _vm.getDailyPrices
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "d-flex justify-content-between align-items-center mb-4" },
+      [
+        !_vm.editMode
+          ? _c(
+              "h4",
+              {
+                staticClass: "font-weight-bold mb-0",
+                staticStyle: { color: "#54413b" }
               },
-              model: {
-                value: _vm.stockSymbol.daily_prices[dailyPriceIndex],
-                callback: function($$v) {
-                  _vm.$set(_vm.stockSymbol.daily_prices, dailyPriceIndex, $$v)
-                },
-                expression: "stockSymbol.daily_prices[dailyPriceIndex]"
+              [_vm._v(_vm._s(_vm.stockSymbol.name))]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editMode
+          ? _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.stockSymbol.name,
+                  expression: "stockSymbol.name"
+                }
+              ],
+              staticClass: "form-control col-2 text-uppercase edit-input",
+              attrs: { maxlength: "6" },
+              domProps: { value: _vm.stockSymbol.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.stockSymbol, "name", $event.target.value)
+                }
               }
             })
+          : _vm._e(),
+        _vm._v(" "),
+        _c("ButtonActions", {
+          attrs: {
+            hasMode: _vm.editMode,
+            saving: _vm.saving,
+            deleting: _vm.deleting,
+            "arrow-up": _vm.opened,
+            "arrow-down": !_vm.opened
+          },
+          on: {
+            onCancel: _vm.onCancel,
+            onDelete: _vm.onDelete,
+            onSave: _vm.onSave,
+            onUpdate: _vm.setEditMode,
+            changeDropdown: function($event) {
+              _vm.opened = !_vm.opened
+            }
+          }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _vm.opened
+      ? _c(
+          "div",
+          [
+            _vm._l(_vm.stockSymbol.daily_prices, function(
+              dailyPrice,
+              dailyPriceIndex
+            ) {
+              return _c(
+                "div",
+                {
+                  key: "daily-price-" + dailyPrice.id,
+                  staticClass: "card p-3 mb-2 daily-price-background"
+                },
+                [
+                  _c("DailyPrice", {
+                    on: {
+                      onCancel: _vm.cancelDailyPrice,
+                      onDelete: _vm.getDailyPrices
+                    },
+                    model: {
+                      value: _vm.stockSymbol.daily_prices[dailyPriceIndex],
+                      callback: function($$v) {
+                        _vm.$set(
+                          _vm.stockSymbol.daily_prices,
+                          dailyPriceIndex,
+                          $$v
+                        )
+                      },
+                      expression: "stockSymbol.daily_prices[dailyPriceIndex]"
+                    }
+                  })
+                ],
+                1
+              )
+            }),
+            _vm._v(" "),
+            _vm.stockSymbol.id !== 0
+              ? _c(
+                  "v-btn",
+                  { staticClass: "mt-4", on: { click: _vm.addDailyPrice } },
+                  [
+                    _c("v-icon", { staticStyle: { "font-size": "11px" } }, [
+                      _vm._v("fas fa-plus fa-pull-left")
+                    ]),
+                    _vm._v(" "),
+                    _c("span", [_vm._v("Add Daily Price")])
+                  ],
+                  1
+                )
+              : _vm._e()
           ],
-          1
+          2
         )
-      }),
-      _vm._v(" "),
-      _vm.stockSymbol.id !== 0
-        ? _c(
-            "v-btn",
-            { staticClass: "mt-4", on: { click: _vm.addDailyPrice } },
-            [
-              _c("v-icon", { staticStyle: { "font-size": "11px" } }, [
-                _vm._v("fas fa-plus fa-pull-left")
-              ]),
-              _vm._v(" "),
-              _c("span", [_vm._v("Add Daily Price")])
-            ],
-            1
-          )
-        : _vm._e()
-    ],
-    2
-  )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -6435,69 +6472,101 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    !_vm.editMode
-      ? _c(
-          "div",
-          [
-            _c(
-              "v-btn",
-              {
-                staticClass: "mr-2",
-                attrs: { disabled: _vm.deleting, small: "" },
-                on: { click: _vm.onUpdate }
-              },
-              [_c("v-icon", [_vm._v("far fa-edit")])],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "v-btn",
-              {
-                attrs: {
-                  loading: _vm.deleting,
-                  disabled: _vm.deleting,
-                  small: ""
+  return _c(
+    "div",
+    { staticClass: "d-flex" },
+    [
+      !_vm.editMode
+        ? _c(
+            "div",
+            [
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mr-2",
+                  attrs: { disabled: _vm.deleting, small: "" },
+                  on: { click: _vm.onUpdate }
                 },
-                on: { click: _vm.onDelete }
-              },
-              [_c("v-icon", [_vm._v("far fa-trash-alt")])],
-              1
-            )
-          ],
-          1
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.editMode
-      ? _c(
-          "div",
-          [
-            _c(
-              "v-btn",
-              {
-                staticClass: "mr-2",
-                attrs: { loading: _vm.saving, disabled: _vm.saving, small: "" },
-                on: { click: _vm.onSave }
-              },
-              [_c("v-icon", [_vm._v("far fa-save")])],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "v-btn",
-              {
-                attrs: { disabled: _vm.saving, small: "" },
-                on: { click: _vm.onCancel }
-              },
-              [_c("v-icon", [_vm._v("fas fa-times")])],
-              1
-            )
-          ],
-          1
-        )
-      : _vm._e()
-  ])
+                [_c("v-icon", [_vm._v("far fa-edit")])],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mr-2",
+                  attrs: {
+                    disabled: _vm.deleting,
+                    loading: _vm.deleting,
+                    small: ""
+                  },
+                  on: { click: _vm.onDelete }
+                },
+                [_c("v-icon", [_vm._v("far fa-trash-alt")])],
+                1
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.editMode
+        ? _c(
+            "div",
+            [
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mr-2",
+                  attrs: {
+                    disabled: _vm.saving,
+                    loading: _vm.saving,
+                    small: ""
+                  },
+                  on: { click: _vm.onSave }
+                },
+                [_c("v-icon", [_vm._v("far fa-save")])],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mr-2",
+                  attrs: { disabled: _vm.saving, small: "" },
+                  on: { click: _vm.onCancel }
+                },
+                [_c("v-icon", [_vm._v("fas fa-times")])],
+                1
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.arrowUp || _vm.arrowDown
+        ? _c(
+            "v-btn",
+            {
+              staticClass: "ml-1",
+              attrs: { disabled: _vm.deleting || _vm.saving, small: "" },
+              on: { click: _vm.changeDropdown }
+            },
+            [
+              _vm.arrowUp
+                ? _c("v-icon", [_vm._v("fas fa-angle-up")])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.arrowDown
+                ? _c("v-icon", [_vm._v("fas fa-angle-down")])
+                : _vm._e()
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

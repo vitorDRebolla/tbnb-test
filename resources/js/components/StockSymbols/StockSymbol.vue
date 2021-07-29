@@ -12,27 +12,32 @@
                 class="form-control col-2 text-uppercase edit-input"
                 maxlength="6"
             />
-            <ButtonActions
+             <ButtonActions
                 :hasMode="editMode"
                 :saving="saving"
                 :deleting="deleting"
+                :arrow-up="opened"
+                :arrow-down="!opened"
                 @onCancel="onCancel"
                 @onDelete="onDelete"
                 @onSave="onSave"
                 @onUpdate="setEditMode"
+                @changeDropdown="opened = !opened"
             />
         </div>
-        <div
-            v-for="(dailyPrice, dailyPriceIndex) in stockSymbol.daily_prices"
-            :key="`daily-price-${dailyPrice.id}`"
-            class="card p-3 mb-2 daily-price-background"
-        >
-            <DailyPrice v-model="stockSymbol.daily_prices[dailyPriceIndex]" @onCancel="cancelDailyPrice" @onDelete="getDailyPrices"/>
+        <div v-if="opened">
+            <div
+                v-for="(dailyPrice, dailyPriceIndex) in stockSymbol.daily_prices"
+                :key="`daily-price-${dailyPrice.id}`"
+                class="card p-3 mb-2 daily-price-background"
+            >
+                <DailyPrice v-model="stockSymbol.daily_prices[dailyPriceIndex]" @onCancel="cancelDailyPrice" @onDelete="getDailyPrices"/>
+            </div>
+            <v-btn v-if="stockSymbol.id !== 0" class="mt-4" @click="addDailyPrice">
+                <v-icon style="font-size: 11px">fas fa-plus fa-pull-left</v-icon>
+                <span>Add Daily Price</span>
+            </v-btn>
         </div>
-        <v-btn v-if="stockSymbol.id !== 0" class="mt-4" @click="addDailyPrice">
-            <v-icon style="font-size: 11px">fas fa-plus fa-pull-left</v-icon>
-            <span>Add Daily Price</span>
-        </v-btn>
     </div>
 </template>
 
@@ -65,7 +70,8 @@ export default {
             editMode: false,
             originalName: '',
             saving: false,
-            deleting: false
+            deleting: false,
+            opened: false,
         }
     },
     methods: {

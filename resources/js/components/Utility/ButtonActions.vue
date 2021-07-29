@@ -1,21 +1,25 @@
 <template>
-    <div>
+    <div class="d-flex">
         <div v-if="!editMode">
-            <v-btn :disabled="deleting" small class="mr-2" @click="onUpdate">
+            <v-btn :disabled="deleting" class="mr-2" small @click="onUpdate">
                 <v-icon>far fa-edit</v-icon>
             </v-btn>
-            <v-btn :loading="deleting" :disabled="deleting" small @click="onDelete">
+            <v-btn :disabled="deleting" :loading="deleting" class="mr-2" small @click="onDelete">
                 <v-icon>far fa-trash-alt</v-icon>
             </v-btn>
         </div>
         <div v-if="editMode">
-            <v-btn :loading="saving" :disabled="saving" small class="mr-2" @click="onSave">
+            <v-btn :disabled="saving" :loading="saving" class="mr-2" small @click="onSave">
                 <v-icon>far fa-save</v-icon>
             </v-btn>
-            <v-btn :disabled="saving" small @click="onCancel">
+            <v-btn :disabled="saving" class="mr-2" small @click="onCancel">
                 <v-icon>fas fa-times</v-icon>
             </v-btn>
         </div>
+        <v-btn class="ml-1" v-if="arrowUp || arrowDown" :disabled="deleting || saving" small @click="changeDropdown">
+            <v-icon v-if="arrowUp">fas fa-angle-up</v-icon>
+            <v-icon v-if="arrowDown">fas fa-angle-down</v-icon>
+        </v-btn>
     </div>
 </template>
 
@@ -38,13 +42,23 @@ export default {
             default: false,
             required: false,
         },
+        arrowUp: {
+            type: Boolean,
+            default: false,
+            required: false,
+        },
+        arrowDown: {
+            type: Boolean,
+            default: false,
+            required: false,
+        }
     },
     mounted() {
         this.setEditMode(this.hasMode);
     },
     watch: {
-      hasMode() {
-          this.setEditMode(this.hasMode);
+        hasMode() {
+            this.setEditMode(this.hasMode);
         }
     },
     data() {
@@ -70,11 +84,14 @@ export default {
         onDelete() {
             this.$emit('onDelete');
         },
+        changeDropdown() {
+            this.$emit('changeDropdown');
+        }
     },
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @media (max-width: 768px) {
     i {
         font-size: 13px !important;
@@ -84,6 +101,7 @@ export default {
         min-width: 36px !important;
     }
 }
+
 @media (min-width: 769px) {
     i {
         font-size: 15px !important;

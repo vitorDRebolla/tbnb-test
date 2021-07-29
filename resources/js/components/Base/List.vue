@@ -58,6 +58,10 @@ export default {
                 name: '',
                 daily_prices: [],
             });
+
+            setTimeout(() => {
+                window.scrollTo(0,document.body.scrollHeight);
+            }, 0);
         },
         onCancel() {
             this.stockSymbols.pop();
