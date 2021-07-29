@@ -5,6 +5,11 @@
             <h5 class="ml-3 mb-0">Loading...</h5>
         </v-row>
         <div v-else>
+            <div class="mb-5" v-if="selectedStockSymbol.id === undefined">
+                <h5 class="mb-0 font-weight-bold">
+                    Please, select one stock symbol to proceed
+                </h5>
+            </div>
             <div v-if="selectedStockSymbol.id === undefined" class="d-flex flex-wrap">
                 <StockSymbolCard
                     v-for="stockSymbol in stockSymbols"

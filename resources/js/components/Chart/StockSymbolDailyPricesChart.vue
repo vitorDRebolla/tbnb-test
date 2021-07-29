@@ -6,16 +6,17 @@
             dark
         >
             <v-card-text>
-                <v-sheet color="rgb(68 156 134)">
+                <v-sheet
+                    class="v-sheet--offset mx-auto"
+                    color="rgb(68 156 134)">
                     <v-sparkline
                         :value="values"
                         color="rgba(194,255,241,1);"
-                        height="100"
-                        padding="20"
-                        smooth
+                        padding="16"
+                        line-width="0.5"
                     >
                         <template v-slot:label="item">
-                            ${{ item.value }}
+                            {{ item.value.replace('.', ',') }}
                         </template>
                     </v-sparkline>
                 </v-sheet>

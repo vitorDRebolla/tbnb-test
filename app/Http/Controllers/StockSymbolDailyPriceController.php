@@ -81,6 +81,6 @@ class StockSymbolDailyPriceController extends Controller
      */
     public function bulkUpdate(Request $request)
     {
-        $this->stockSymbolDailyPriceService->bulkUpdate($request->all());
+        return $this->stockSymbolDailyPriceService->bulkUpdate($request->all());
     }
 }

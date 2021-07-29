@@ -46,7 +46,7 @@ Class StockSymbolDailyPriceService
         DB::beginTransaction();
         try {
             foreach ($data as $item) {
-                $stockSymbol = StockSymbol::where('name', $item['name'])->first();
+                $stockSymbol = StockSymbol::where('name', $item['stock_symbol_name'])->first();
                 $this->update($stockSymbol, $item['day'], $item['price']);
             }
             DB::commit();

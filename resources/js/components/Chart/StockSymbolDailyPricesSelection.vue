@@ -18,7 +18,7 @@
         <div class="d-flex align-items-center flex-wrap mb-5">
             <div
                 v-for="(dailyPrice, dailyPriceIndex) in stockSymbol.daily_prices"
-                class="form-check card shadow p-1 mb-2 mr-2 col-2"
+                class="form-check card shadow p-1 mb-2 mr-2 col-md-2 col-sm-5"
             >
                 <input
                     v-model="stockSymbol.daily_prices[dailyPriceIndex].selected"
@@ -29,7 +29,7 @@
                     style="margin-left: 20px;"
                     class="form-check-label"
                     :for="`checkbox-${dailyPrice.id}`">
-                    {{ dailyPrice.day | formatDate }} - ${{ dailyPrice.price }}
+                    {{ dailyPrice.day | formatDate }} - ${{ dailyPrice.price.replace('.', ',') }}
                 </label>
             </div>
         </div>
@@ -87,6 +87,6 @@ export default {
     }
 }
 h2, h5 {
-    color: rgb(84, 65, 59);
+    color: #30403C;
 }
 </style>

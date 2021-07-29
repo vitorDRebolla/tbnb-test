@@ -1869,18 +1869,68 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _BulkUpdate_DailyPriceCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BulkUpdate/DailyPriceCard */ "./resources/js/components/BulkUpdate/DailyPriceCard.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'BulkUpdate',
+  components: {
+    DailyPriceCard: _BulkUpdate_DailyPriceCard__WEBPACK_IMPORTED_MODULE_0__.default
+  },
   data: function data() {
     return {
-      stockSymbols: []
+      stockSymbols: [],
+      loading: true,
+      saving: false,
+      saved: false
     };
+  },
+  computed: {
+    dailyPrices: function dailyPrices() {
+      return this.stockSymbols.flatMap(function (stockSymbol) {
+        return stockSymbol.daily_prices.map(function (dailyPrice) {
+          return _objectSpread(_objectSpread({}, dailyPrice), {}, {
+            stock_symbol_name: stockSymbol.name,
+            changed: false
+          });
+        });
+      });
+    },
+    changedDailyPrices: function changedDailyPrices() {
+      return this.dailyPrices.filter(function (dailyPrice) {
+        return dailyPrice.changed;
+      });
+    }
   },
   mounted: function mounted() {
     this.getStockSymbols();
@@ -1894,6 +1944,16 @@ __webpack_require__.r(__webpack_exports__);
         _this.stockSymbols = data;
       }).then(function () {
         _this.loading = false;
+      });
+    },
+    saveChanges: function saveChanges() {
+      var _this2 = this;
+
+      this.saving = true;
+      this.axios.post('/api/stock-symbols-daily-price', this.changedDailyPrices).then(function () {
+        _this2.saving = false;
+      }).then(function () {
+        _this2.saved = true;
       });
     }
   }
@@ -1914,6 +1974,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Chart_StockSymbolCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Chart/StockSymbolCard */ "./resources/js/components/Chart/StockSymbolCard.vue");
 /* harmony import */ var _Chart_StockSymbolDailyPricesSelection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Chart/StockSymbolDailyPricesSelection */ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue");
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2065,6 +2130,97 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'DailyPriceCard',
+  props: {
+    value: Object,
+    saved: Boolean
+  },
+  computed: {
+    dailyPrice: {
+      get: function get() {
+        return this.value;
+      },
+      set: function set(value) {
+        this.$emit('input', value);
+      }
+    }
+  },
+  watch: {
+    saved: function saved() {
+      if (this.saved) {
+        this.editMode = false;
+        this.setChanged(false);
+      }
+    }
+  },
+  data: function data() {
+    return {
+      editMode: false,
+      changed: false
+    };
+  },
+  methods: {
+    setChanged: function setChanged(value) {
+      this.changed = value;
+      this.$set(this.dailyPrice, 'changed', value);
+    },
+    onInput: function onInput() {
+      this.setChanged(true);
+      this.$emit('changed');
+    }
+  },
+  filters: {
+    formatDate: function formatDate(value) {
+      var date = new Date(value);
+      return date.toLocaleDateString();
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolCard.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolCard.vue?vue&type=script&lang=js& ***!
@@ -2114,6 +2270,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
 //
 //
 //
@@ -2820,6 +2977,30 @@ var opts = {};
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".edit-item[data-v-4acbb039] {\n  right: 5px;\n  top: 5px;\n  font-size: 18px !important;\n  cursor: pointer;\n}\n.card[data-v-4acbb039] {\n  width: 185px;\n  height: 120px;\n}\np[data-v-4acbb039], input[data-v-4acbb039] {\n  margin-bottom: 7px !important;\n}\n.edited[data-v-4acbb039] {\n  background-color: #fffdc1;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& ***!
@@ -2837,7 +3018,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".form-check.card[data-v-f364546a]:hover {\n  transform: scale(1.05);\n  cursor: pointer;\n}\n.form-check.card > label[data-v-f364546a] {\n  cursor: pointer;\n}\nh2[data-v-f364546a], h5[data-v-f364546a] {\n  color: #54413b;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".form-check.card[data-v-f364546a]:hover {\n  transform: scale(1.05);\n  cursor: pointer;\n}\n.form-check.card > label[data-v-f364546a] {\n  cursor: pointer;\n}\nh2[data-v-f364546a], h5[data-v-f364546a] {\n  color: #30403C;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3639,6 +3820,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_style_index_0_id_4acbb039_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_style_index_0_id_4acbb039_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_style_index_0_id_4acbb039_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& ***!
@@ -4253,7 +4464,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _BulkUpdate_vue_vue_type_template_id_86423b04_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true& */ "./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true&");
+/* harmony import */ var _BulkUpdate_vue_vue_type_template_id_86423b04___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BulkUpdate.vue?vue&type=template&id=86423b04& */ "./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&");
 /* harmony import */ var _BulkUpdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BulkUpdate.vue?vue&type=script&lang=js& */ "./resources/js/components/Base/BulkUpdate.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
@@ -4265,11 +4476,11 @@ __webpack_require__.r(__webpack_exports__);
 ;
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
   _BulkUpdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
-  _BulkUpdate_vue_vue_type_template_id_86423b04_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
-  _BulkUpdate_vue_vue_type_template_id_86423b04_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _BulkUpdate_vue_vue_type_template_id_86423b04___WEBPACK_IMPORTED_MODULE_0__.render,
+  _BulkUpdate_vue_vue_type_template_id_86423b04___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
-  "86423b04",
+  null,
   null
   
 )
@@ -4355,6 +4566,47 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 /* hot reload */
 if (false) { var api; }
 component.options.__file = "resources/js/components/Base/List.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/BulkUpdate/DailyPriceCard.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/BulkUpdate/DailyPriceCard.vue ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DailyPriceCard_vue_vue_type_template_id_4acbb039_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true& */ "./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true&");
+/* harmony import */ var _DailyPriceCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DailyPriceCard.vue?vue&type=script&lang=js& */ "./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=script&lang=js&");
+/* harmony import */ var _DailyPriceCard_vue_vue_type_style_index_0_id_4acbb039_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true& */ "./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__.default)(
+  _DailyPriceCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+  _DailyPriceCard_vue_vue_type_template_id_4acbb039_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _DailyPriceCard_vue_vue_type_template_id_4acbb039_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "4acbb039",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/BulkUpdate/DailyPriceCard.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -4706,6 +4958,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DailyPriceCard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+
+/***/ }),
+
 /***/ "./resources/js/components/Chart/StockSymbolCard.vue?vue&type=script&lang=js&":
 /*!************************************************************************************!*\
   !*** ./resources/js/components/Chart/StockSymbolCard.vue?vue&type=script&lang=js& ***!
@@ -4818,6 +5086,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true&":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true& ***!
+  \*************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_style_index_0_id_4acbb039_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=style&index=0&id=4acbb039&lang=scss&scoped=true&");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&":
 /*!*************************************************************************************************************************************!*\
   !*** ./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& ***!
@@ -4913,19 +5194,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true&":
-/*!************************************************************************************************!*\
-  !*** ./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true& ***!
-  \************************************************************************************************/
+/***/ "./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04& ***!
+  \************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BulkUpdate_vue_vue_type_template_id_86423b04_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BulkUpdate_vue_vue_type_template_id_86423b04_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BulkUpdate_vue_vue_type_template_id_86423b04___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BulkUpdate_vue_vue_type_template_id_86423b04___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BulkUpdate_vue_vue_type_template_id_86423b04_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BulkUpdate_vue_vue_type_template_id_86423b04___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./BulkUpdate.vue?vue&type=template&id=86423b04& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&");
 
 
 /***/ }),
@@ -4960,6 +5241,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_List_vue_vue_type_template_id_3688b561_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_List_vue_vue_type_template_id_3688b561_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./List.vue?vue&type=template&id=3688b561&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Base/List.vue?vue&type=template&id=3688b561&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true&":
+/*!**********************************************************************************************************!*\
+  !*** ./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true& ***!
+  \**********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_template_id_4acbb039_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_template_id_4acbb039_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DailyPriceCard_vue_vue_type_template_id_4acbb039_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true&");
 
 
 /***/ }),
@@ -5116,10 +5414,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true&":
-/*!***************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&scoped=true& ***!
-  \***************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Base/BulkUpdate.vue?vue&type=template&id=86423b04& ***!
+  \***************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5132,7 +5430,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    BulkUpdate\n")])
+  return _c(
+    "div",
+    [
+      _vm.loading
+        ? _c(
+            "v-row",
+            {
+              staticClass: "mt-3",
+              attrs: { align: "center", justify: "center" }
+            },
+            [
+              _c("v-icon", [_vm._v("fas fa-circle-notch fa-spin fa-lg")]),
+              _vm._v(" "),
+              _c("h5", { staticClass: "ml-3 mb-0" }, [_vm._v("Loading...")])
+            ],
+            1
+          )
+        : _c("div", [
+            _c(
+              "div",
+              { staticClass: "mb-5" },
+              [
+                _c(
+                  "v-btn",
+                  {
+                    attrs: { disabled: _vm.saving },
+                    on: { click: _vm.saveChanges }
+                  },
+                  [
+                    !_vm.saving ? _c("span", [_vm._v("Save")]) : _vm._e(),
+                    _vm._v(" "),
+                    _vm.saving
+                      ? _c("v-icon", [
+                          _vm._v("fas fa-circle-notch fa-spin fa-lg")
+                        ])
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "d-flex flex-wrap" },
+              _vm._l(_vm.dailyPrices, function(dailyPrice, dailyPriceIndex) {
+                return _c("DailyPriceCard", {
+                  attrs: { saved: _vm.saved },
+                  on: {
+                    changed: function($event) {
+                      _vm.saved = false
+                    }
+                  },
+                  model: {
+                    value: _vm.dailyPrices[dailyPriceIndex],
+                    callback: function($$v) {
+                      _vm.$set(_vm.dailyPrices, dailyPriceIndex, $$v)
+                    },
+                    expression: "dailyPrices[dailyPriceIndex]"
+                  }
+                })
+              }),
+              1
+            )
+          ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -5177,6 +5543,16 @@ var render = function() {
         : _c(
             "div",
             [
+              _vm.selectedStockSymbol.id === undefined
+                ? _c("div", { staticClass: "mb-5" }, [
+                    _c("h5", { staticClass: "mb-0 font-weight-bold" }, [
+                      _vm._v(
+                        "\n                Please, select one stock symbol to proceed\n            "
+                      )
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _vm.selectedStockSymbol.id === undefined
                 ? _c(
                     "div",
@@ -5307,6 +5683,122 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/BulkUpdate/DailyPriceCard.vue?vue&type=template&id=4acbb039&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      {
+        class: [
+          "card border shadow p-3 position-relative mr-2 mb-2",
+          { edited: _vm.changed }
+        ]
+      },
+      [
+        _c(
+          "v-icon",
+          {
+            staticClass: "position-absolute edit-item",
+            on: {
+              click: function($event) {
+                _vm.editMode = !_vm.editMode
+              }
+            }
+          },
+          [_vm._v("\n            far fa-edit\n        ")]
+        ),
+        _vm._v(" "),
+        _c("h5", [_vm._v(_vm._s(_vm.dailyPrice.stock_symbol_name))]),
+        _vm._v(" "),
+        !_vm.editMode
+          ? _c("div", [
+              _c("p", [
+                _vm._v(_vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)))
+              ]),
+              _vm._v(" "),
+              _c("p", [_vm._v(_vm._s(_vm.dailyPrice.price.replace(".", ",")))])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editMode
+          ? _c("div", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.dailyPrice.day,
+                    expression: "dailyPrice.day"
+                  }
+                ],
+                staticClass: "form-control edit-input",
+                attrs: { type: "date" },
+                domProps: { value: _vm.dailyPrice.day },
+                on: {
+                  input: [
+                    function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.dailyPrice, "day", $event.target.value)
+                    },
+                    _vm.onInput
+                  ]
+                }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.dailyPrice.price,
+                    expression: "dailyPrice.price"
+                  }
+                ],
+                staticClass: "form-control edit-input",
+                attrs: { type: "number" },
+                domProps: { value: _vm.dailyPrice.price },
+                on: {
+                  input: [
+                    function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.dailyPrice, "price", $event.target.value)
+                    },
+                    _vm.onInput
+                  ]
+                }
+              })
+            ])
+          : _vm._e()
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolCard.vue?vue&type=template&id=c8e00f5c&":
 /*!*********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolCard.vue?vue&type=template&id=c8e00f5c& ***!
@@ -5326,7 +5818,7 @@ var render = function() {
   return _c(
     "v-card",
     {
-      staticClass: "col-2 mr-2 mb-2 p-0",
+      staticClass: "col-md-2 col-sm-6 mr-2 mb-2 p-0",
       attrs: { hover: "" },
       on: { click: _vm.setSelectedStockSymbol }
     },
@@ -5378,15 +5870,17 @@ var render = function() {
             [
               _c(
                 "v-sheet",
-                { attrs: { color: "rgb(68 156 134)" } },
+                {
+                  staticClass: "v-sheet--offset mx-auto",
+                  attrs: { color: "rgb(68 156 134)" }
+                },
                 [
                   _c("v-sparkline", {
                     attrs: {
                       value: _vm.values,
                       color: "rgba(194,255,241,1);",
-                      height: "100",
-                      padding: "20",
-                      smooth: ""
+                      padding: "16",
+                      "line-width": "0.5"
                     },
                     scopedSlots: _vm._u([
                       {
@@ -5394,8 +5888,8 @@ var render = function() {
                         fn: function(item) {
                           return [
                             _vm._v(
-                              "\n                        $" +
-                                _vm._s(item.value) +
+                              "\n                        " +
+                                _vm._s(item.value.replace(".", ",")) +
                                 "\n                    "
                             )
                           ]
@@ -5489,7 +5983,10 @@ var render = function() {
         ) {
           return _c(
             "div",
-            { staticClass: "form-check card shadow p-1 mb-2 mr-2 col-2" },
+            {
+              staticClass:
+                "form-check card shadow p-1 mb-2 mr-2 col-md-2 col-sm-5"
+            },
             [
               _c("input", {
                 directives: [
@@ -5565,7 +6062,7 @@ var render = function() {
                     "\n                " +
                       _vm._s(_vm._f("formatDate")(dailyPrice.day)) +
                       " - $" +
-                      _vm._s(dailyPrice.price) +
+                      _vm._s(dailyPrice.price.replace(".", ",")) +
                       "\n            "
                   )
                 ]
