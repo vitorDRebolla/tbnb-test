@@ -5,19 +5,26 @@
             <h5 class="ml-3 mb-0">Loading...</h5>
         </v-row>
         <div v-else>
-            <div class="mb-5">
-                <v-btn :disabled="saving" @click="saveChanges">
-                    <span v-if="!saving">Save</span>
-                    <v-icon v-if="saving">fas fa-circle-notch fa-spin fa-lg</v-icon>
-                </v-btn>
+            <div v-if="dailyPrices.length > 0">
+                <div class="mb-5" >
+                    <v-btn :disabled="saving" @click="saveChanges">
+                        <span v-if="!saving">Save</span>
+                        <v-icon v-if="saving">fas fa-circle-notch fa-spin fa-lg</v-icon>
+                    </v-btn>
+                </div>
+                <div class="d-flex flex-wrap">
+                    <DailyPriceCard
+                        v-for="(dailyPrice, dailyPriceIndex) in dailyPrices"
+                        v-model="dailyPrices[dailyPriceIndex]"
+                        :saved="saved"
+                        @changed="saved = false"
+                    />
+                </div>
             </div>
-            <div class="d-flex flex-wrap">
-                <DailyPriceCard
-                    v-for="(dailyPrice, dailyPriceIndex) in dailyPrices"
-                    v-model="dailyPrices[dailyPriceIndex]"
-                    :saved="saved"
-                    @changed="saved = false"
-                />
+            <div v-else>
+                <h5 class="font-weight-bold">
+                    Please, register at least one daily price to bulk update.
+                </h5>
             </div>
         </div>
     </div>

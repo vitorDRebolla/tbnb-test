@@ -88,6 +88,8 @@ export default {
         },
         onSave() {
             if (!this.validateDailyPrice) {
+                this.snackbar = true;
+                this.errorText = 'Invalid price.';
                 return;
             }
             this.saving = true;
@@ -105,6 +107,8 @@ export default {
                 `/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily/${this.dailyPrice.day}/prices`
             ).then(() => {
                 this.$emit('onDelete');
+                this.snackbar = true;
+                this.errorText = 'Daily price deleted successfully!';
             }).then(() => {
                 this.deleting = false;
             });
@@ -118,7 +122,9 @@ export default {
             this.axios.post(`/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices`, this.dailyPrice).then(({data}) => {
                 this.dailyPrice.id = data.id;
                 this.setEditMode(false);
-            }).catch(() => {
+                this.snackbar = true;
+                this.errorText = 'Daily price saved successfully!';
+            }).catch((error) => {
                 this.snackbar = true;
                 this.errorText = this.retrieveFirstError(error.response.data.errors)
             }).finally(() => {
@@ -132,6 +138,8 @@ export default {
             ).then(({data}) => {
                 this.originalPrice = data.price;
                 this.setEditMode(false);
+                this.snackbar = true;
+                this.errorText = 'Daily price updated successfully!';
             }).catch((error) => {
                 this.snackbar = true;
                 this.errorText = this.retrieveFirstError(error.response.data.errors)

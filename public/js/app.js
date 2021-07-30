@@ -1901,6 +1901,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'BulkUpdate',
@@ -1974,6 +1981,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Chart_StockSymbolCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Chart/StockSymbolCard */ "./resources/js/components/Chart/StockSymbolCard.vue");
 /* harmony import */ var _Chart_StockSymbolDailyPricesSelection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Chart/StockSymbolDailyPricesSelection */ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue");
+//
+//
+//
 //
 //
 //
@@ -2599,6 +2609,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     onSave: function onSave() {
       if (!this.validateDailyPrice) {
+        this.snackbar = true;
+        this.errorText = 'Invalid price.';
         return;
       }
 
@@ -2617,6 +2629,9 @@ __webpack_require__.r(__webpack_exports__);
       this.deleting = true;
       this.axios["delete"]("/api/stock-symbols/".concat(this.dailyPrice.stock_symbol_id, "/daily/").concat(this.dailyPrice.day, "/prices")).then(function () {
         _this.$emit('onDelete');
+
+        _this.snackbar = true;
+        _this.errorText = 'Daily price deleted successfully!';
       }).then(function () {
         _this.deleting = false;
       });
@@ -2634,7 +2649,10 @@ __webpack_require__.r(__webpack_exports__);
         _this2.dailyPrice.id = data.id;
 
         _this2.setEditMode(false);
-      })["catch"](function () {
+
+        _this2.snackbar = true;
+        _this2.errorText = 'Daily price saved successfully!';
+      })["catch"](function (error) {
         _this2.snackbar = true;
         _this2.errorText = _this2.retrieveFirstError(error.response.data.errors);
       })["finally"](function () {
@@ -2649,6 +2667,9 @@ __webpack_require__.r(__webpack_exports__);
         _this3.originalPrice = data.price;
 
         _this3.setEditMode(false);
+
+        _this3.snackbar = true;
+        _this3.errorText = 'Daily price updated successfully!';
       })["catch"](function (error) {
         _this3.snackbar = true;
         _this3.errorText = _this3.retrieveFirstError(error.response.data.errors);
@@ -2780,6 +2801,8 @@ __webpack_require__.r(__webpack_exports__);
 
       this.axios.post('/api/stock-symbols', this.stockSymbol).then(function (_ref) {
         var data = _ref.data;
+        _this.snackbar = true;
+        _this.errorText = 'Stock symbol saved successfully!';
         _this.stockSymbol.id = data.id;
 
         _this.setEditMode(false);
@@ -2795,6 +2818,8 @@ __webpack_require__.r(__webpack_exports__);
 
       this.axios.put("/api/stock-symbols/".concat(this.stockSymbol.id), this.stockSymbol).then(function (_ref2) {
         var data = _ref2.data;
+        _this2.snackbar = true;
+        _this2.errorText = 'Stock symbol updated successfully!';
         _this2.originalName = data.name;
 
         _this2.setEditMode(false);
@@ -2807,6 +2832,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     onSave: function onSave() {
       if (this.validateStockSymbolName()) {
+        this.snackbar = true;
+        this.errorText = 'Invalid name.';
         return;
       }
 
@@ -2834,6 +2861,9 @@ __webpack_require__.r(__webpack_exports__);
       this.deleting = true;
       this.axios["delete"]("/api/stock-symbols/".concat(this.stockSymbol.id)).then(function () {
         _this3.$emit('onDelete');
+
+        _this3.snackbar = true;
+        _this3.errorText = 'Stock symbol deleted successfully!';
       }).then(function () {
         _this3.deleting = false;
       });
@@ -2843,6 +2873,8 @@ __webpack_require__.r(__webpack_exports__);
         var lastItem = this.stockSymbol.daily_prices[this.stockSymbol.daily_prices.length - 1];
 
         if (lastItem.id === 0) {
+          this.snackbar = true;
+          this.errorText = 'You need to save the last stock symbol to add another one';
           return;
         }
       }
@@ -5668,53 +5700,66 @@ var render = function() {
             1
           )
         : _c("div", [
-            _c(
-              "div",
-              { staticClass: "mb-5" },
-              [
-                _c(
-                  "v-btn",
-                  {
-                    attrs: { disabled: _vm.saving },
-                    on: { click: _vm.saveChanges }
-                  },
-                  [
-                    !_vm.saving ? _c("span", [_vm._v("Save")]) : _vm._e(),
-                    _vm._v(" "),
-                    _vm.saving
-                      ? _c("v-icon", [
-                          _vm._v("fas fa-circle-notch fa-spin fa-lg")
-                        ])
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "d-flex flex-wrap" },
-              _vm._l(_vm.dailyPrices, function(dailyPrice, dailyPriceIndex) {
-                return _c("DailyPriceCard", {
-                  attrs: { saved: _vm.saved },
-                  on: {
-                    changed: function($event) {
-                      _vm.saved = false
-                    }
-                  },
-                  model: {
-                    value: _vm.dailyPrices[dailyPriceIndex],
-                    callback: function($$v) {
-                      _vm.$set(_vm.dailyPrices, dailyPriceIndex, $$v)
-                    },
-                    expression: "dailyPrices[dailyPriceIndex]"
-                  }
-                })
-              }),
-              1
-            )
+            _vm.dailyPrices.length > 0
+              ? _c("div", [
+                  _c(
+                    "div",
+                    { staticClass: "mb-5" },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { disabled: _vm.saving },
+                          on: { click: _vm.saveChanges }
+                        },
+                        [
+                          !_vm.saving ? _c("span", [_vm._v("Save")]) : _vm._e(),
+                          _vm._v(" "),
+                          _vm.saving
+                            ? _c("v-icon", [
+                                _vm._v("fas fa-circle-notch fa-spin fa-lg")
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "d-flex flex-wrap" },
+                    _vm._l(_vm.dailyPrices, function(
+                      dailyPrice,
+                      dailyPriceIndex
+                    ) {
+                      return _c("DailyPriceCard", {
+                        attrs: { saved: _vm.saved },
+                        on: {
+                          changed: function($event) {
+                            _vm.saved = false
+                          }
+                        },
+                        model: {
+                          value: _vm.dailyPrices[dailyPriceIndex],
+                          callback: function($$v) {
+                            _vm.$set(_vm.dailyPrices, dailyPriceIndex, $$v)
+                          },
+                          expression: "dailyPrices[dailyPriceIndex]"
+                        }
+                      })
+                    }),
+                    1
+                  )
+                ])
+              : _c("div", [
+                  _c("h5", { staticClass: "font-weight-bold" }, [
+                    _vm._v(
+                      "\n                Please, register at least one daily price to bulk update.\n            "
+                    )
+                  ])
+                ])
           ])
     ],
     1
@@ -5767,7 +5812,13 @@ var render = function() {
                 ? _c("div", { staticClass: "mb-5" }, [
                     _c("h5", { staticClass: "mb-0 font-weight-bold" }, [
                       _vm._v(
-                        "\n                Please, select one stock symbol to proceed\n            "
+                        "\n                " +
+                          _vm._s(
+                            _vm.stockSymbols.length > 0
+                              ? "Please, select one stock symbol to proceed:"
+                              : "Please, register at least one stock symbol to build a chart."
+                          ) +
+                          "\n            "
                       )
                     ])
                   ])

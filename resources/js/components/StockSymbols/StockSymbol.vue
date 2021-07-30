@@ -89,6 +89,8 @@ export default {
         },
         saveNewStockSymbol() {
             this.axios.post('/api/stock-symbols', this.stockSymbol).then(({data}) => {
+                this.snackbar = true;
+                this.errorText = 'Stock symbol saved successfully!';
                 this.stockSymbol.id = data.id;
                 this.setEditMode(false);
             }).catch((error) => {
@@ -100,6 +102,8 @@ export default {
         },
         updateStockSymbol() {
             this.axios.put(`/api/stock-symbols/${this.stockSymbol.id}`, this.stockSymbol).then(({data}) => {
+                this.snackbar = true;
+                this.errorText = 'Stock symbol updated successfully!';
                 this.originalName = data.name;
                 this.setEditMode(false);
             }).catch((error) => {
@@ -111,6 +115,8 @@ export default {
         },
         onSave() {
             if (this.validateStockSymbolName()) {
+                this.snackbar = true;
+                this.errorText = 'Invalid name.';
                 return;
             }
 
@@ -135,6 +141,8 @@ export default {
             this.deleting = true;
             this.axios.delete(`/api/stock-symbols/${this.stockSymbol.id}`).then(() => {
                 this.$emit('onDelete');
+                this.snackbar = true;
+                this.errorText = 'Stock symbol deleted successfully!';
             }).then(() => {
                 this.deleting = false;
             })
@@ -143,6 +151,8 @@ export default {
             if (this.stockSymbol.daily_prices.length > 0) {
                 const lastItem = this.stockSymbol.daily_prices[this.stockSymbol.daily_prices.length - 1];
                 if (lastItem.id === 0) {
+                    this.snackbar = true;
+                    this.errorText = 'You need to save the last stock symbol to add another one';
                     return;
                 }
             }

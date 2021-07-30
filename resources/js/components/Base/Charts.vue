@@ -7,7 +7,10 @@
         <div v-else>
             <div class="mb-5" v-if="selectedStockSymbol.id === undefined">
                 <h5 class="mb-0 font-weight-bold">
-                    Please, select one stock symbol to proceed
+                    {{ stockSymbols.length > 0 ?
+                        'Please, select one stock symbol to proceed:'
+                        : 'Please, register at least one stock symbol to build a chart.'
+                    }}
                 </h5>
             </div>
             <div v-if="selectedStockSymbol.id === undefined" class="d-flex flex-wrap">
