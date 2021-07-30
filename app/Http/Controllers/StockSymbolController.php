@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StockSymbolRequest;
 use App\Models\StockSymbol;
 use Illuminate\Http\Request;
 
@@ -16,10 +17,10 @@ class StockSymbolController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StockSymbolRequest $request
      * @return mixed
      */
-    public function store(Request $request)
+    public function store(StockSymbolRequest $request)
     {
         return StockSymbol::create($request->all());
     }
@@ -34,11 +35,11 @@ class StockSymbolController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StockSymbolRequest $request
      * @param StockSymbol $stockSymbol
      * @return StockSymbol
      */
-    public function update(Request $request, StockSymbol $stockSymbol)
+    public function update(StockSymbolRequest $request, StockSymbol $stockSymbol)
     {
         $stockSymbol->update($request->all());
         return $stockSymbol;

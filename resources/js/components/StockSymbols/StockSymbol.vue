@@ -12,17 +12,17 @@
                 class="form-control col-2 text-uppercase edit-input"
                 maxlength="6"
             />
-             <ButtonActions
+            <ButtonActions
+                :arrow-down="!opened"
+                :arrow-up="opened"
+                :deleting="deleting"
                 :hasMode="editMode"
                 :saving="saving"
-                :deleting="deleting"
-                :arrow-up="opened"
-                :arrow-down="!opened"
+                @changeDropdown="opened = !opened"
                 @onCancel="onCancel"
                 @onDelete="onDelete"
                 @onSave="onSave"
                 @onUpdate="setEditMode"
-                @changeDropdown="opened = !opened"
             />
         </div>
         <div v-if="opened">
@@ -31,23 +31,26 @@
                 :key="`daily-price-${dailyPrice.id}`"
                 class="card p-3 mb-2 daily-price-background"
             >
-                <DailyPrice v-model="stockSymbol.daily_prices[dailyPriceIndex]" @onCancel="cancelDailyPrice" @onDelete="getDailyPrices"/>
+                <DailyPrice v-model="stockSymbol.daily_prices[dailyPriceIndex]" @onCancel="cancelDailyPrice"
+                            @onDelete="getDailyPrices"/>
             </div>
             <v-btn v-if="stockSymbol.id !== 0" class="mt-4" @click="addDailyPrice">
                 <v-icon style="font-size: 11px">fas fa-plus fa-pull-left</v-icon>
                 <span>Add Daily Price</span>
             </v-btn>
         </div>
+        <Errorhandler v-model="snackbar" :text="errorText"/>
     </div>
 </template>
 
 <script>
 import DailyPrice from "./Dailyprice";
 import ButtonActions from "../Utility/ButtonActions";
+import Errorhandler from "../Utility/ErrorHandler";
 
 export default {
     name: 'StockSymbol',
-    components: {ButtonActions, DailyPrice},
+    components: {Errorhandler, ButtonActions, DailyPrice},
     props: {
         value: Object,
     },
@@ -72,6 +75,8 @@ export default {
             saving: false,
             deleting: false,
             opened: false,
+            snackbar: false,
+            errorText: '',
         }
     },
     methods: {
@@ -85,17 +90,23 @@ export default {
         saveNewStockSymbol() {
             this.axios.post('/api/stock-symbols', this.stockSymbol).then(({data}) => {
                 this.stockSymbol.id = data.id;
-            }).then(() => {
                 this.setEditMode(false);
+            }).catch((response) => {
+                this.snackbar = true;
+                this.errorText = 'A stock symbol with this name already exists.'
+            }).finally(() => {
                 this.saving = false;
-            })
+            });
         },
         updateStockSymbol() {
             this.axios.put(`/api/stock-symbols/${this.stockSymbol.id}`, this.stockSymbol).then(({data}) => {
                 this.originalName = data.name;
-            }).then(() => {
-                this.saving = false;
                 this.setEditMode(false);
+            }).catch((response) => {
+                this.snackbar = true;
+                this.errorText = 'A stock symbol with this name already exists.'
+            }).finally(() => {
+                this.saving = false;
             });
         },
         onSave() {
@@ -147,7 +158,7 @@ export default {
             this.stockSymbol.daily_prices.pop();
         },
         getDailyPrices() {
-            this.axios.get(`/api/stock-symbols/${this.stockSymbol.id}/daily-prices`).then(({ data }) => {
+            this.axios.get(`/api/stock-symbols/${this.stockSymbol.id}/daily-prices`).then(({data}) => {
                 this.stockSymbol.daily_prices = data;
             })
         }

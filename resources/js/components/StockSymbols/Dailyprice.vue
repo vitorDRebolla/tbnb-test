@@ -9,7 +9,8 @@
                     v-if="dailyPrice.id === 0"
                     v-model="dailyPrice.day"
                     class="form-control col-6 edit-input"
-                    type="DATE"
+                    type="date"
+                    :max="today"
                 />
                 <h5 class="mb-0">&nbsp;- $</h5>
                 <input
@@ -48,6 +49,13 @@ export default {
             set(value) {
                 this.$emit('input', value);
             }
+        },
+        today() {
+            const today = new Date();
+            const month = today.getMonth()+1;
+            const formattedMonth = month.toString().length === 1 ? `0${month}` : month;
+
+            return `${today.getFullYear()}-${formattedMonth}-${today.getDate()}`
         }
     },
     mounted() {

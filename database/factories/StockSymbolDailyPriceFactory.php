@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\StockSymbol;
 use App\Models\StockSymbolDailyPrice;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +23,9 @@ class StockSymbolDailyPriceFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'stock_symbol_id' => StockSymbol::inRandomOrder()->first()->id,
+            'day' => $this->faker->date(),
+            'price' => $this->faker->randomFloat(2)
         ];
     }
 }

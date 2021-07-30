@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StockSymbolDailyPriceRequest;
 use App\Models\StockSymbol;
 use App\Models\StockSymbolDailyPrice;
 use App\Services\StockSymbolDailyPriceService;
@@ -31,10 +32,10 @@ class StockSymbolDailyPriceController extends Controller
 
     /**
      * @param StockSymbol $stockSymbol
-     * @param Request $request
+     * @param StockSymbolDailyPriceRequest $request
      * @return false|\Illuminate\Database\Eloquent\Model
      */
-    public function store(StockSymbol $stockSymbol, Request $request)
+    public function store(StockSymbol $stockSymbol, StockSymbolDailyPriceRequest $request)
     {
         $stockSymbolDailyPrice = new StockSymbolDailyPrice($request->all());
         return $stockSymbol->dailyPrices()->save($stockSymbolDailyPrice);
@@ -52,10 +53,10 @@ class StockSymbolDailyPriceController extends Controller
 
     /**
      * @param StockSymbol $stockSymbol
-     * @param Request $request
+     * @param StockSymbolDailyPriceRequest $request
      * @return array
      */
-    public function update(StockSymbol $stockSymbol, Request $request)
+    public function update(StockSymbol $stockSymbol, StockSymbolDailyPriceRequest $request)
     {
         $price = $request->get('price');
         $this->stockSymbolDailyPriceService->update(
@@ -81,6 +82,6 @@ class StockSymbolDailyPriceController extends Controller
      */
     public function bulkUpdate(Request $request)
     {
-        return $this->stockSymbolDailyPriceService->bulkUpdate($request->all());
+        $this->stockSymbolDailyPriceService->bulkUpdate($request->all());
     }
 }
