@@ -18,20 +18,24 @@
                 <StockSymbol @onCancel="onCancel" @onDelete="onDelete" v-model="stockSymbols[stockSymbolIndex]"/>
             </div>
         </div>
+        <Errorhandler v-model="snackbar" :text="errorText"/>
     </div>
 </template>
 
 <script>
 import StockSymbol from "../StockSymbols/StockSymbol";
 import ButtonActions from "../Utility/ButtonActions";
+import Errorhandler from "../Utility/ErrorHandler";
 
 export default {
     name: 'List',
-    components: {ButtonActions, StockSymbol },
+    components: {ButtonActions, StockSymbol, Errorhandler },
     data() {
         return {
             stockSymbols: [],
             loading: true,
+            snackbar: false,
+            errorText: '',
         };
     },
     mounted() {
@@ -49,6 +53,8 @@ export default {
             if (this.stockSymbols.length > 0 ) {
                 const lastItem = this.stockSymbols[this.stockSymbols.length -1];
                 if (lastItem.id === 0) {
+                    this.snackbar = true;
+                    this.errorText = 'You need to save the last stock symbol to add another one';
                     return;
                 }
             }

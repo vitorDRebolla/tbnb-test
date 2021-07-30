@@ -2063,6 +2063,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _StockSymbols_StockSymbol__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../StockSymbols/StockSymbol */ "./resources/js/components/StockSymbols/StockSymbol.vue");
 /* harmony import */ var _Utility_ButtonActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utility/ButtonActions */ "./resources/js/components/Utility/ButtonActions.vue");
+/* harmony import */ var _Utility_ErrorHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Utility/ErrorHandler */ "./resources/js/components/Utility/ErrorHandler.vue");
 //
 //
 //
@@ -2086,18 +2087,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'List',
   components: {
     ButtonActions: _Utility_ButtonActions__WEBPACK_IMPORTED_MODULE_1__.default,
-    StockSymbol: _StockSymbols_StockSymbol__WEBPACK_IMPORTED_MODULE_0__.default
+    StockSymbol: _StockSymbols_StockSymbol__WEBPACK_IMPORTED_MODULE_0__.default,
+    Errorhandler: _Utility_ErrorHandler__WEBPACK_IMPORTED_MODULE_2__.default
   },
   data: function data() {
     return {
       stockSymbols: [],
-      loading: true
+      loading: true,
+      snackbar: false,
+      errorText: ''
     };
   },
   mounted: function mounted() {
@@ -2119,6 +2125,8 @@ __webpack_require__.r(__webpack_exports__);
         var lastItem = this.stockSymbols[this.stockSymbols.length - 1];
 
         if (lastItem.id === 0) {
+          this.snackbar = true;
+          this.errorText = 'You need to save the last stock symbol to add another one';
           return;
         }
       }
@@ -2678,7 +2686,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     retrieveFirstError: function retrieveFirstError(errors) {
-      return Object.values(errors)[0];
+      return Object.values(errors)[0][0];
     }
   },
   filters: {
@@ -2874,7 +2882,7 @@ __webpack_require__.r(__webpack_exports__);
 
         if (lastItem.id === 0) {
           this.snackbar = true;
-          this.errorText = 'You need to save the last stock symbol to add another one';
+          this.errorText = 'You need to save the last daily price to add another one';
           return;
         }
       }
@@ -3052,7 +3060,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     timeout: {
       type: Number,
-      "default": 3000,
+      "default": 5000,
       required: false
     },
     text: {
@@ -5942,7 +5950,18 @@ var render = function() {
               })
             ],
             2
-          )
+          ),
+      _vm._v(" "),
+      _c("Errorhandler", {
+        attrs: { text: _vm.errorText },
+        model: {
+          value: _vm.snackbar,
+          callback: function($$v) {
+            _vm.snackbar = $$v
+          },
+          expression: "snackbar"
+        }
+      })
     ],
     1
   )

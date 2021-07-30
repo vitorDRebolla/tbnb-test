@@ -152,7 +152,7 @@ export default {
                 const lastItem = this.stockSymbol.daily_prices[this.stockSymbol.daily_prices.length - 1];
                 if (lastItem.id === 0) {
                     this.snackbar = true;
-                    this.errorText = 'You need to save the last stock symbol to add another one';
+                    this.errorText = 'You need to save the last daily price to add another one';
                     return;
                 }
             }
