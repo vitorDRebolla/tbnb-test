@@ -2216,8 +2216,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   filters: {
     formatDate: function formatDate(value) {
-      var date = new Date(value);
-      return date.toLocaleDateString();
+      var values = value.split('-')[0];
+      return "".concat(values[1], "/").concat(values[2], "/").concat(values[0]);
     }
   }
 });
@@ -2389,15 +2389,33 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
+  mounted: function mounted() {
+    this.setLast30DaysDailyPrices();
+  },
   methods: {
     backToStockSymbolList: function backToStockSymbolList() {
       this.$emit('back-to-list', {});
+    },
+    setLast30DaysDailyPrices: function setLast30DaysDailyPrices() {
+      var _this = this;
+
+      var date = new Date();
+      date.setDate(date.getDate() - 30);
+      date = this.createDateAsUTC(date);
+      this.stockSymbol.daily_prices = this.stockSymbol.daily_prices.filter(function (dailyPrice) {
+        var dailyPriceDate = _this.createDateAsUTC(new Date(dailyPrice.day));
+
+        return new Date(dailyPrice.day) >= date;
+      });
+    },
+    createDateAsUTC: function createDateAsUTC(date) {
+      return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
     }
   },
   filters: {
     formatDate: function formatDate(value) {
-      var date = new Date(value);
-      return date.toLocaleDateString();
+      var values = value.split('-');
+      return "".concat(values[1], "/").concat(values[2], "/").concat(values[0]);
     }
   }
 });
@@ -2490,6 +2508,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Utility_ButtonActions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Utility/ButtonActions */ "./resources/js/components/Utility/ButtonActions.vue");
+/* harmony import */ var _Utility_ErrorHandler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utility/ErrorHandler */ "./resources/js/components/Utility/ErrorHandler.vue");
+//
 //
 //
 //
@@ -2525,9 +2545,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DailyPrice',
   components: {
+    Errorhandler: _Utility_ErrorHandler__WEBPACK_IMPORTED_MODULE_1__.default,
     ButtonActions: _Utility_ButtonActions__WEBPACK_IMPORTED_MODULE_0__.default
   },
   props: {
@@ -2558,7 +2580,9 @@ __webpack_require__.r(__webpack_exports__);
       editMode: false,
       originalPrice: 0,
       saving: false,
-      deleting: false
+      deleting: false,
+      errorText: '',
+      snackbar: false
     };
   },
   methods: {
@@ -2608,9 +2632,12 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.post("/api/stock-symbols/".concat(this.dailyPrice.stock_symbol_id, "/daily-prices"), this.dailyPrice).then(function (_ref) {
         var data = _ref.data;
         _this2.dailyPrice.id = data.id;
-      }).then(function () {
-        _this2.setEditMode(false);
 
+        _this2.setEditMode(false);
+      })["catch"](function () {
+        _this2.snackbar = true;
+        _this2.errorText = _this2.retrieveFirstError(error.response.data.errors);
+      })["finally"](function () {
         _this2.saving = false;
       });
     },
@@ -2620,17 +2647,23 @@ __webpack_require__.r(__webpack_exports__);
       this.axios.put("/api/stock-symbols/".concat(this.dailyPrice.stock_symbol_id, "/daily-prices/").concat(this.dailyPrice.id), this.dailyPrice).then(function (_ref2) {
         var data = _ref2.data;
         _this3.originalPrice = data.price;
-      }).then(function () {
-        _this3.saving = false;
 
         _this3.setEditMode(false);
+      })["catch"](function (error) {
+        _this3.snackbar = true;
+        _this3.errorText = _this3.retrieveFirstError(error.response.data.errors);
+      })["finally"](function () {
+        _this3.saving = false;
       });
+    },
+    retrieveFirstError: function retrieveFirstError(errors) {
+      return Object.values(errors)[0];
     }
   },
   filters: {
     formatDate: function formatDate(value) {
-      var date = new Date(value);
-      return date.toLocaleDateString();
+      var values = value.split('-');
+      return "".concat(values[1], "/").concat(values[2], "/").concat(values[0]);
     }
   }
 });
@@ -2750,9 +2783,9 @@ __webpack_require__.r(__webpack_exports__);
         _this.stockSymbol.id = data.id;
 
         _this.setEditMode(false);
-      })["catch"](function (response) {
+      })["catch"](function (error) {
         _this.snackbar = true;
-        _this.errorText = 'A stock symbol with this name already exists.';
+        _this.errorText = _this.retrieveFirstError(error.response.data.errors);
       })["finally"](function () {
         _this.saving = false;
       });
@@ -2765,9 +2798,9 @@ __webpack_require__.r(__webpack_exports__);
         _this2.originalName = data.name;
 
         _this2.setEditMode(false);
-      })["catch"](function (response) {
+      })["catch"](function (error) {
         _this2.snackbar = true;
-        _this2.errorText = 'A stock symbol with this name already exists.';
+        _this2.errorText = _this2.retrieveFirstError(error.response.data.errors);
       })["finally"](function () {
         _this2.saving = false;
       });
@@ -2831,6 +2864,9 @@ __webpack_require__.r(__webpack_exports__);
         var data = _ref3.data;
         _this4.stockSymbol.daily_prices = data;
       });
+    },
+    retrieveFirstError: function retrieveFirstError(errors) {
+      return Object.values(errors)[0];
     }
   }
 });
@@ -3113,9 +3149,9 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".edit-item[data-v-4acbb039] {\n  right
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&":
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& ***!
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true& ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -3962,9 +3998,9 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&":
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true&":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& ***!
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true& ***!
   \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3975,7 +4011,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true&");
 
             
 
@@ -3984,11 +4020,11 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__.default, options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default, options);
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
 
 /***/ }),
 
@@ -4816,7 +4852,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _StockSymbolDailyPricesSelection_vue_vue_type_template_id_f364546a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StockSymbolDailyPricesSelection.vue?vue&type=template&id=f364546a&scoped=true& */ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=template&id=f364546a&scoped=true&");
 /* harmony import */ var _StockSymbolDailyPricesSelection_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StockSymbolDailyPricesSelection.vue?vue&type=script&lang=js& */ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=script&lang=js&");
-/* harmony import */ var _StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& */ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&");
+/* harmony import */ var _StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true& */ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -5266,15 +5302,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&":
+/***/ "./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true&":
 /*!*************************************************************************************************************************************!*\
-  !*** ./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& ***!
+  !*** ./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true& ***!
   \*************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_scoped_true_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&scoped=true&lang=scss&");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_12_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_StockSymbolDailyPricesSelection_vue_vue_type_style_index_0_id_f364546a_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-12[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Chart/StockSymbolDailyPricesSelection.vue?vue&type=style&index=0&id=f364546a&lang=scss&scoped=true&");
 
 
 /***/ }),
@@ -6188,7 +6224,7 @@ var render = function() {
                   bottom: "9px",
                   cursor: "pointer"
                 },
-                attrs: { type: "checkbox", id: "checkbox-" + dailyPrice.id },
+                attrs: { id: "checkbox-" + dailyPrice.id, type: "checkbox" },
                 domProps: {
                   checked: Array.isArray(
                     _vm.stockSymbol.daily_prices[dailyPriceIndex].selected
@@ -6374,96 +6410,111 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "d-flex justify-content-between align-items-center" },
-      [
-        !_vm.editMode
-          ? _c("h5", { staticClass: "mb-0" }, [
-              _vm._v(
-                _vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)) +
-                  " -\n            $" +
-                  _vm._s(_vm.dailyPrice.price.toString().replace(".", ","))
-              )
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.editMode
-          ? _c("div", { staticClass: "d-flex align-items-center" }, [
-              _vm.dailyPrice.id !== 0
-                ? _c("h5", { staticClass: "mb-0" }, [
-                    _vm._v(_vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)))
-                  ])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.dailyPrice.id === 0
-                ? _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.dailyPrice.day,
-                        expression: "dailyPrice.day"
-                      }
-                    ],
-                    staticClass: "form-control col-6 edit-input",
-                    attrs: { type: "date", max: _vm.today },
-                    domProps: { value: _vm.dailyPrice.day },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        { staticClass: "d-flex justify-content-between align-items-center" },
+        [
+          !_vm.editMode
+            ? _c("h5", { staticClass: "mb-0" }, [
+                _vm._v(
+                  _vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)) +
+                    " -\n            $" +
+                    _vm._s(_vm.dailyPrice.price.toString().replace(".", ","))
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.editMode
+            ? _c("div", { staticClass: "d-flex align-items-center" }, [
+                _vm.dailyPrice.id !== 0
+                  ? _c("h5", { staticClass: "mb-0" }, [
+                      _vm._v(_vm._s(_vm._f("formatDate")(_vm.dailyPrice.day)))
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.dailyPrice.id === 0
+                  ? _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.dailyPrice.day,
+                          expression: "dailyPrice.day"
                         }
-                        _vm.$set(_vm.dailyPrice, "day", $event.target.value)
+                      ],
+                      staticClass: "form-control col-6 edit-input",
+                      attrs: { max: _vm.today, type: "date" },
+                      domProps: { value: _vm.dailyPrice.day },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.dailyPrice, "day", $event.target.value)
+                        }
                       }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("h5", { staticClass: "mb-0" }, [_vm._v(" - $")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.dailyPrice.price,
+                      expression: "dailyPrice.price"
                     }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("h5", { staticClass: "mb-0" }, [_vm._v(" - $")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.dailyPrice.price,
-                    expression: "dailyPrice.price"
-                  }
-                ],
-                staticClass: "form-control col-5 edit-input",
-                attrs: { type: "number" },
-                domProps: { value: _vm.dailyPrice.price },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                  ],
+                  staticClass: "form-control col-5 edit-input",
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.dailyPrice.price },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.dailyPrice, "price", $event.target.value)
                     }
-                    _vm.$set(_vm.dailyPrice, "price", $event.target.value)
                   }
-                }
-              })
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _c("ButtonActions", {
-          attrs: {
-            hasMode: _vm.editMode,
-            saving: _vm.saving,
-            deleting: _vm.deleting
+                })
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("ButtonActions", {
+            attrs: {
+              deleting: _vm.deleting,
+              hasMode: _vm.editMode,
+              saving: _vm.saving
+            },
+            on: {
+              onCancel: _vm.onCancel,
+              onDelete: _vm.onDelete,
+              onSave: _vm.onSave,
+              onUpdate: _vm.setEditMode
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("Errorhandler", {
+        attrs: { text: _vm.errorText },
+        model: {
+          value: _vm.snackbar,
+          callback: function($$v) {
+            _vm.snackbar = $$v
           },
-          on: {
-            onCancel: _vm.onCancel,
-            onDelete: _vm.onDelete,
-            onSave: _vm.onSave,
-            onUpdate: _vm.setEditMode
-          }
-        })
-      ],
-      1
-    )
-  ])
+          expression: "snackbar"
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

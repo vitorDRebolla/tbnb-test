@@ -71,8 +71,8 @@ export default {
     },
     filters: {
         formatDate(value) {
-            let date = new Date(value);
-            return date.toLocaleDateString();
+            const values = value.split('-')[0];
+            return `${values[1]}/${values[2]}/${values[0]}`;
         }
     }
 }

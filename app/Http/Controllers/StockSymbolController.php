@@ -4,16 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StockSymbolRequest;
 use App\Models\StockSymbol;
-use Illuminate\Http\Request;
 
 class StockSymbolController extends Controller
 {
     /**
-     * @return StockSymbol[]|array[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        return StockSymbol::with('dailyPrices')->orderBy('name')->get();
+        $stockSymbols = StockSymbol::with('dailyPrices')->orderBy('name')->get();
+        return response()->json($stockSymbols);
     }
 
     /**

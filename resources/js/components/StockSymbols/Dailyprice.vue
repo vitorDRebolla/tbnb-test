@@ -8,9 +8,9 @@
                 <input
                     v-if="dailyPrice.id === 0"
                     v-model="dailyPrice.day"
+                    :max="today"
                     class="form-control col-6 edit-input"
                     type="date"
-                    :max="today"
                 />
                 <h5 class="mb-0">&nbsp;- $</h5>
                 <input
@@ -20,24 +20,26 @@
                 />
             </div>
             <ButtonActions
+                :deleting="deleting"
                 :hasMode="editMode"
                 :saving="saving"
-                :deleting="deleting"
                 @onCancel="onCancel"
                 @onDelete="onDelete"
                 @onSave="onSave"
                 @onUpdate="setEditMode"
             />
         </div>
+        <Errorhandler v-model="snackbar" :text="errorText"/>
     </div>
 </template>
 
 <script>
 import ButtonActions from "../Utility/ButtonActions";
+import Errorhandler from "../Utility/ErrorHandler";
 
 export default {
     name: 'DailyPrice',
-    components: {ButtonActions},
+    components: {Errorhandler, ButtonActions},
     props: {
         value: Object,
     },
@@ -52,7 +54,7 @@ export default {
         },
         today() {
             const today = new Date();
-            const month = today.getMonth()+1;
+            const month = today.getMonth() + 1;
             const formattedMonth = month.toString().length === 1 ? `0${month}` : month;
 
             return `${today.getFullYear()}-${formattedMonth}-${today.getDate()}`
@@ -67,7 +69,9 @@ export default {
             editMode: false,
             originalPrice: 0,
             saving: false,
-            deleting: false
+            deleting: false,
+            errorText: '',
+            snackbar: false,
         }
     },
     methods: {
@@ -107,15 +111,17 @@ export default {
         },
         validateDailyPrice() {
             if (+this.dailyPrice.price === 0) {
-                return  false;
+                return false;
             }
         },
         saveNewDailyPrice() {
-            this.axios.post(`/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices`, this.dailyPrice)
-                .then(({data}) => {
-                    this.dailyPrice.id = data.id;
-                }).then(() => {
+            this.axios.post(`/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices`, this.dailyPrice).then(({data}) => {
+                this.dailyPrice.id = data.id;
                 this.setEditMode(false);
+            }).catch(() => {
+                this.snackbar = true;
+                this.errorText = this.retrieveFirstError(error.response.data.errors)
+            }).finally(() => {
                 this.saving = false;
             })
         },
@@ -125,16 +131,22 @@ export default {
                 this.dailyPrice
             ).then(({data}) => {
                 this.originalPrice = data.price;
-            }).then(() => {
-                this.saving = false;
                 this.setEditMode(false);
+            }).catch((error) => {
+                this.snackbar = true;
+                this.errorText = this.retrieveFirstError(error.response.data.errors)
+            }).finally(() => {
+                this.saving = false;
             })
+        },
+        retrieveFirstError(errors) {
+            return Object.values(errors)[0];
         }
     },
     filters: {
         formatDate(value) {
-            let date = new Date(value);
-            return date.toLocaleDateString();
+            const values = value.split('-');
+            return `${values[1]}/${values[2]}/${values[0]}`;
         }
     }
 }

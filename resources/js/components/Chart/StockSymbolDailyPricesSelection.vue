@@ -21,14 +21,14 @@
                 class="form-check card shadow p-1 mb-2 mr-2 col-md-2 col-sm-5"
             >
                 <input
+                    :id="`checkbox-${dailyPrice.id}`"
                     v-model="stockSymbol.daily_prices[dailyPriceIndex].selected"
-                    type="checkbox"
                     style="position:absolute; bottom: 9px; cursor:pointer;"
-                    :id="`checkbox-${dailyPrice.id}`">
+                    type="checkbox">
                 <label
-                    style="margin-left: 20px;"
+                    :for="`checkbox-${dailyPrice.id}`"
                     class="form-check-label"
-                    :for="`checkbox-${dailyPrice.id}`">
+                    style="margin-left: 20px;">
                     {{ dailyPrice.day | formatDate }} - ${{ dailyPrice.price.replace('.', ',') }}
                 </label>
             </div>
@@ -39,6 +39,7 @@
 
 <script>
 import StockSymbolDailyPricesChart from "./StockSymbolDailyPricesChart";
+
 export default {
     name: 'StockSymbolDailyPricesSelection',
     components: {StockSymbolDailyPricesChart},
@@ -59,23 +60,38 @@ export default {
         },
         values() {
             return this.selectedDailyPrices.map((dailyPrice) => +dailyPrice.price);
-        }
+        },
+    },
+    mounted() {
+        this.setLast30DaysDailyPrices();
     },
     methods: {
         backToStockSymbolList() {
-          this.$emit('back-to-list', {});
+            this.$emit('back-to-list', {});
+        },
+        setLast30DaysDailyPrices() {
+            let date = new Date();
+            date.setDate(date.getDate() - 30);
+            date = this.createDateAsUTC(date);
+            this.stockSymbol.daily_prices = this.stockSymbol.daily_prices.filter((dailyPrice) => {
+                const dailyPriceDate = this.createDateAsUTC(new Date(dailyPrice.day))
+                return new Date(dailyPrice.day) >= date;
+            })
+        },
+        createDateAsUTC(date) {
+            return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
         }
     },
     filters: {
         formatDate(value) {
-            let date = new Date(value);
-            return date.toLocaleDateString();
+            const values = value.split('-');
+            return `${values[1]}/${values[2]}/${values[0]}`;
         }
     }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .form-check.card {
     &:hover {
         transform: scale(1.05);
@@ -86,6 +102,7 @@ export default {
         cursor: pointer;
     }
 }
+
 h2, h5 {
     color: #30403C;
 }

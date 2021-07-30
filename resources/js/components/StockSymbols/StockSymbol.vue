@@ -91,9 +91,9 @@ export default {
             this.axios.post('/api/stock-symbols', this.stockSymbol).then(({data}) => {
                 this.stockSymbol.id = data.id;
                 this.setEditMode(false);
-            }).catch((response) => {
+            }).catch((error) => {
                 this.snackbar = true;
-                this.errorText = 'A stock symbol with this name already exists.'
+                this.errorText = this.retrieveFirstError(error.response.data.errors)
             }).finally(() => {
                 this.saving = false;
             });
@@ -102,9 +102,9 @@ export default {
             this.axios.put(`/api/stock-symbols/${this.stockSymbol.id}`, this.stockSymbol).then(({data}) => {
                 this.originalName = data.name;
                 this.setEditMode(false);
-            }).catch((response) => {
+            }).catch((error) => {
                 this.snackbar = true;
-                this.errorText = 'A stock symbol with this name already exists.'
+                this.errorText = this.retrieveFirstError(error.response.data.errors)
             }).finally(() => {
                 this.saving = false;
             });
@@ -161,6 +161,9 @@ export default {
             this.axios.get(`/api/stock-symbols/${this.stockSymbol.id}/daily-prices`).then(({data}) => {
                 this.stockSymbol.daily_prices = data;
             })
+        },
+        retrieveFirstError(errors) {
+            return Object.values(errors)[0];
         }
     },
 }

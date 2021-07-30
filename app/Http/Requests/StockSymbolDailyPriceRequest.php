@@ -37,7 +37,7 @@ class StockSymbolDailyPriceRequest extends FormRequest
                 'date',
                 "before_or_equal:$today"
             ],
-            'price' => 'numeric'
+            'price' => 'numeric|min:0.01'
         ];
     }
 }
