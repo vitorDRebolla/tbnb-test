@@ -104,9 +104,9 @@ export default {
             this.axios.delete(
                 `/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily/${this.dailyPrice.day}/prices`
             ).then(() => {
-                this.$emit('onDelete');
                 this.snackbar = true;
                 this.errorText = 'Daily price deleted successfully!';
+                this.$emit('onDelete');
             }).then(() => {
                 this.deleting = false;
             });

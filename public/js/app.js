@@ -2634,10 +2634,10 @@ __webpack_require__.r(__webpack_exports__);
 
       this.deleting = true;
       this.axios["delete"]("/api/stock-symbols/".concat(this.dailyPrice.stock_symbol_id, "/daily/").concat(this.dailyPrice.day, "/prices")).then(function () {
-        _this.$emit('onDelete');
-
         _this.snackbar = true;
         _this.errorText = 'Daily price deleted successfully!';
+
+        _this.$emit('onDelete');
       }).then(function () {
         _this.deleting = false;
       });

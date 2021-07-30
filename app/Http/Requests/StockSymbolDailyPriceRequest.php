@@ -29,11 +29,12 @@ class StockSymbolDailyPriceRequest extends FormRequest
         $ruleUnique = Rule::unique('stock_symbol_daily_price')
             ->where('stock_symbol_id', $data['stock_symbol_id']);
         $today = Carbon::today();
+        $id = (int)$this->request->get('id');
 
         return [
             'day' => [
                 'required',
-                $data['id'] ? $ruleUnique->ignore($data['id']) : $ruleUnique,
+                $id ? $ruleUnique->ignore($id) : $ruleUnique,
                 'date',
                 "before_or_equal:$today"
             ],
