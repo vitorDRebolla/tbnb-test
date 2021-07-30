@@ -173,7 +173,7 @@ export default {
             })
         },
         retrieveFirstError(errors) {
-            return Object.values(errors)[0];
+            return Object.values(errors)[0][0];
         }
     },
 }

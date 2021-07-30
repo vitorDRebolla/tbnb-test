@@ -2914,7 +2914,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     retrieveFirstError: function retrieveFirstError(errors) {
-      return Object.values(errors)[0];
+      return Object.values(errors)[0][0];
     }
   }
 });
