@@ -88,8 +88,6 @@ export default {
         },
         onSave() {
             if (!this.validateDailyPrice) {
-                this.snackbar = true;
-                this.errorText = 'Invalid price.';
                 return;
             }
             this.saving = true;
@@ -115,8 +113,18 @@ export default {
         },
         validateDailyPrice() {
             if (+this.dailyPrice.price === 0) {
+                this.snackbar = true;
+                this.errorText = 'Invalid price.';
                 return false;
             }
+
+            if (this.dailyPrice.day === '') {
+                this.snackbar = true;
+                this.errorText = 'Invalid date.';
+                return false;
+            }
+
+            return true;
         },
         saveNewDailyPrice() {
             this.axios.post(`/api/stock-symbols/${this.dailyPrice.stock_symbol_id}/daily-prices`, this.dailyPrice).then(({data}) => {

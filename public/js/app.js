@@ -2617,8 +2617,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     onSave: function onSave() {
       if (!this.validateDailyPrice) {
-        this.snackbar = true;
-        this.errorText = 'Invalid price.';
         return;
       }
 
@@ -2646,8 +2644,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     validateDailyPrice: function validateDailyPrice() {
       if (+this.dailyPrice.price === 0) {
+        this.snackbar = true;
+        this.errorText = 'Invalid price.';
         return false;
       }
+
+      if (this.dailyPrice.day === '') {
+        this.snackbar = true;
+        this.errorText = 'Invalid date.';
+        return false;
+      }
+
+      return true;
     },
     saveNewDailyPrice: function saveNewDailyPrice() {
       var _this2 = this;
